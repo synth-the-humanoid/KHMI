@@ -1,0 +1,5 @@
+EntryOffset,epic1.0.0.9,0x10354F
+MainLoop,epic1.0.0.9,0x103480
+WorldID,epic1.0.0.9,0x2340DDC
+CodeSeg,epic1.0.0.9,0x103000
+LoadLibraryExW,epic1.0.0.9,0x3B1478
