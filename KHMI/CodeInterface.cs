@@ -105,7 +105,14 @@ namespace KHMI
             return paddedReplacement;
         }
 
-        public bool insertCode(IntPtr address, byte[] payload, int originalCodeSize=0) // inserts a jump statement at address which preserves originalCode of the length of originalCodeSize, or the size of payload if it is 0. size should be 13 or greater
+        public IntPtr allocDataRegion(int size) // allocates a region of size bytes in the process. returns a pointer to the data
+        {
+            IntPtr address = MemoryInterface.VirtualAllocEx(memInterface.processHandle, 0, size, MemoryInterface.MEM_COMMIT, MemoryInterface.PAGE_EXECUTE_READWRITE);
+            openMemory.Append(address);
+            return address;
+        }
+
+        public bool insertHook(IntPtr address, byte[] payload, int originalCodeSize=0) // inserts a jump statement at address which preserves originalCode of the length of originalCodeSize, or the size of payload if it is 0. size should be 13 or greater
         {
             if(originalCodeSize == 0)
             {
@@ -121,6 +128,75 @@ namespace KHMI
             result = result && WaitForDebugEventEx(debugEvent, 0);
             result = result && ContinueDebugEvent(debugEvent[1], debugEvent[2], DBG_CONTINUE);
             return result;
+        }
+
+        public bool insertDataHook(IntPtr address, byte[] payload, IntPtr data, int originalCodeSize = 0) // inserts a hook, but sets the RAX register to hold the IntPtr data
+        {
+            byte[] prefix = { 0x50, 0x48, 0xB8 };
+            byte[] dataBytes = BitConverter.GetBytes(data);
+            byte[] postfix = { 0x58 };
+
+            byte[] newPayload = new byte[prefix.Length + dataBytes.Length + payload.Length + postfix.Length];
+
+            int i = 0;
+            foreach (byte b in prefix)
+            {
+                newPayload[i++] = b;
+            }
+            foreach (byte b in dataBytes)
+            {
+                newPayload[i++] = b;
+            }
+            foreach (byte b in payload)
+            {
+                newPayload[i++] = b;
+            }
+            foreach (byte b in postfix)
+            {
+                newPayload[i++] = b;
+            }
+
+            return insertHook(address, newPayload, originalCodeSize);
+        }
+
+        public bool insertMultiHook(IntPtr address, byte[][] payloads, int originalCodeSize=0) // inserts multiple payloads at one address. runs them in order of appearance in the array
+        {
+            byte[] data = new byte[IntPtr.Size * (payloads.Length + 1)];
+            int iData = 0;
+            int bytesWritten = 0;
+            foreach (byte[] bArray in payloads)
+            {
+                byte[] currentPostfix = { 0xC3 };
+                byte[] currentPayload = new byte[bArray.Length + currentPostfix.Length];
+
+                int i = 0;
+                foreach(byte b in bArray)
+                {
+                    currentPayload[i++] = b;
+                }
+                foreach (byte b in currentPostfix)
+                {
+                    currentPayload[i++] = b;
+                }
+
+                IntPtr payloadAddress = allocDataRegion(currentPayload.Length);
+                MemoryInterface.WriteProcessMemory(memInterface.processHandle, payloadAddress, currentPayload, currentPayload.Length, ref bytesWritten);
+                byte[] addressBytes = BitConverter.GetBytes(payloadAddress);
+                foreach(byte b in addressBytes)
+                {
+                    data[iData++] = b;
+                }
+            }
+
+            while(iData < data.Length)
+            {
+                data[iData++] = 0;
+            }
+
+            IntPtr jumpTableAddress = allocDataRegion(data.Length);
+            MemoryInterface.WriteProcessMemory(memInterface.processHandle, jumpTableAddress, data, data.Length, ref bytesWritten);
+            byte[] multiLoader = { 0x48, 0x83, 0x38, 0x00, 0x0F, 0x84, 0x08, 0x00, 0x00, 0x00, 0xFF, 0x10, 0x48, 0x83, 0xC0, 0x08, 0xEB, 0xEE };
+            return insertDataHook(address, multiLoader, jumpTableAddress, originalCodeSize);
         }
 
         public bool isLinked

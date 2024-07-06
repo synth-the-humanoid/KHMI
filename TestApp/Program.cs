@@ -40,7 +40,7 @@ foreach (byte b in postfix)
 {
     payload[i++] = b;
 }
-ci.insertCode(mi.nameToAddress("MainLoopEntryOffset"), payload, 14); // inserts code at a defined symbol in offsets.csv
+ci.insertHook(mi.nameToAddress("MainLoopEntryOffset"), payload, 14); // inserts code at a defined symbol in offsets.csv
 
 Console.WriteLine("Success! Press Enter to Kill!"); // kills the process as it deallocates in-use memory. in a real application, don't close the dll classes until the game closes
 ci.close();
