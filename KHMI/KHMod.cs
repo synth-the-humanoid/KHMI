@@ -12,14 +12,14 @@
         {
             switch (eventName)
             {
-                case "frameUpdate":
-                    frameUpdate();
+                case "warpEvent":
+                    warpUpdate(BitConverter.ToInt32(data));
                     break;
                 default:
                     break;
             }
         }
 
-        public virtual void frameUpdate() { }
+        public virtual void warpUpdate(int newWarpID) { }
     }
 }

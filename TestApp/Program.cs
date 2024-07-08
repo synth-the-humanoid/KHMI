@@ -50,8 +50,8 @@ class TestMod : KHMod
         
     }
 
-    public override void frameUpdate()
+    public override void warpUpdate(int newWarpID)
     {
-        Console.WriteLine("Frame Update!\nCurrent WarpID: {0:D}\n", modInterface.dataInterface.WarpID);
+        Console.WriteLine("WarpID Update!\nNew WarpID: {0:D}\n", newWarpID);
     }
 }

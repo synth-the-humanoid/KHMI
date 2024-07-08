@@ -25,7 +25,7 @@
 
         private void createDefaultEvents()
         {
-            evHandler.registerCodeEvent("frameUpdate", memInterface.nameToAddress("MainLoopEntryOffset"), 14, false);
+            evHandler.registerDataEvent("warpEvent", memInterface.nameToAddress("WarpID"), 4);
         }
 
         public bool close()
@@ -46,7 +46,6 @@
                 }
                 foreach (KHMod eachMod in modList)
                 {
-                    Console.WriteLine(eventName);
                     eachMod.handleEvent(eventName, runnableEvents[eventName].value);
                 }
                 if (shouldPause)
