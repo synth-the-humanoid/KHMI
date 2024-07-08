@@ -1,4 +1,4 @@
-﻿using KHMI.types;
+﻿using KHMI.Types;
 
 namespace KHMI
 {
@@ -31,6 +31,9 @@ namespace KHMI
                         playerUnloadedEvent();
                     }
                     break;
+                case "frameUpdate":
+                    frameUpdate();
+                    break;
                 default:
                     break;
             }
@@ -39,5 +42,7 @@ namespace KHMI
         public virtual void warpUpdate(int newWarpID) { }
         public virtual void playerLoadedEvent(Entity newPlayer) { }
         public virtual void playerUnloadedEvent() { }
+
+        public virtual void frameUpdate() { }
     }
 }

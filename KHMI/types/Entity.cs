@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace KHMI.types
+namespace KHMI.Types
 {
     public class Entity
     {
@@ -66,6 +66,19 @@ namespace KHMI.types
             }
         }
 
+        public Actor Actor
+        {
+            get
+            {
+                int offset = dataInterface.modInterface.memoryInterface.readInt(address + 0x130);
+                if (offset == 0)
+                {
+                    return null;
+                }
+                return new Actor(dataInterface, dataInterface.convert4to8(offset));
+            }
+        }
+
         private string vec3toString(Vector3 v)
         {
             return string.Format("X: {0:F2}\nY: {1:F2}\nZ: {2:F2}\n", v.X, v.Y, v.Z);
@@ -76,13 +89,18 @@ namespace KHMI.types
             string pos = string.Format("Position:\n{0}\n", vec3toString(Position));
             string rot = string.Format("Rotation\n{0}\n", vec3toString(Rotation));
             string sp = StatPage.toString();
-            string pi = "";
+            string pi = "No PortraitInfo.";
+            string ai = "No Actor.";
             if (PortraitInfo != null)
             {
                 pi = "PortraitInfo Info:\n" + PortraitInfo.toString();
             }
+            if (Actor != null)
+            {
+                ai = "Actor Info:\n" + Actor.toString();
+            }
 
-            return string.Format("{0}\n{1}\nStatPage Info:\n{2}\n{3}\n", pos, rot, sp, pi);
+            return string.Format("{0}\n{1}\nStatPage Info:\n{2}\n{3}\n{4}\n", pos, rot, sp, pi, ai);
         }
     }
 }

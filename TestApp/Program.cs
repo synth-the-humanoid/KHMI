@@ -1,5 +1,5 @@
 ﻿using KHMI;
-using KHMI.types;
+using KHMI.Types;
 
 
 Console.WriteLine("Press enter to attempt to load Kingdom Hearts Final Mix");
@@ -46,9 +46,17 @@ mi.close();
 
 class TestMod : KHMod
 {
+    private Entity player;
     public TestMod(ModInterface mi) : base(mi)
     {
-        
+        IntPtr soraPtr = mi.memoryInterface.nameToAddress("PlayerEntity");
+        IntPtr entityPtr = (IntPtr)mi.memoryInterface.readLong(soraPtr);
+        player = new Entity(mi.dataInterface, entityPtr);
+    }
+
+    public override void frameUpdate()
+    {
+        Console.WriteLine("Sora Info:\n{0}\n", player.toString());
     }
 
     public override void warpUpdate(int newWarpID)
@@ -58,6 +66,6 @@ class TestMod : KHMod
 
     public override void playerLoadedEvent(Entity newPlayer)
     {
-        Console.WriteLine("Sora Loaded!\n{0}", newPlayer.toString());
+        
     }
 }

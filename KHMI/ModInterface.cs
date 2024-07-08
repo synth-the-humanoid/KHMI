@@ -35,6 +35,7 @@
         {
             evHandler.registerDataEvent("warpEvent", memInterface.nameToAddress("WarpID"), 4);
             evHandler.registerDataEvent("playerLoadedEvent", memInterface.nameToAddress("PlayerEntity"), 8);
+            evHandler.registerCodeEvent("frameUpdate", memInterface.nameToAddress("MainLoopEntryOffset"), 14);
         }
 
         public bool close()

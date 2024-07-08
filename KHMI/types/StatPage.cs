@@ -1,4 +1,4 @@
-﻿namespace KHMI.types
+﻿namespace KHMI.Types
 {
    public class StatPage
     {
