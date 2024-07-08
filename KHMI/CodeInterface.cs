@@ -21,12 +21,23 @@ namespace KHMI
         private IntPtr[] openMemory = Array.Empty<IntPtr>(); // pointers to allocated memory that is freed on close
         public CodeInterface(MemoryInterface mi) // creates a code interface, linked to an already linked memory interface
         {
-            if (mi != null && mi.isLinked)
+            if (mi != null)
             {
                 memInterface = mi;
-                DebugActiveProcess(memInterface.processId);
-
+                StartDebug();
             }
+        }
+
+        internal bool DebugPause()
+        {
+            return DebugBreakProcess(memInterface.processHandle);
+        }
+
+        internal bool DebugUnpause()
+        {
+            int[] debugEvent = new int[32];
+            bool result = WaitForDebugEventEx(debugEvent, 0);
+            return result && ContinueDebugEvent(debugEvent[1], debugEvent[2], DBG_CONTINUE);
         }
 
         private byte[] assembleHook(byte[] originalCode, byte[] payload) // creates a byte array of assembly code that includes code we've overwritten to jump to this array, the payload, and a template to preserve registers and return
@@ -68,6 +79,7 @@ namespace KHMI
         {
             byte[] prefix = { 0x50, 0x48, 0xB8 };
             byte[] hookAddress = allocHook(originalCode, payload);
+            Console.WriteLine("Hook Address: {0:X}", BitConverter.ToInt32(hookAddress));
             byte[] postfix = { 0xFF, 0xD0 };
 
             byte[] replacement = new byte[prefix.Length + hookAddress.Length + postfix.Length];
@@ -122,12 +134,9 @@ namespace KHMI
             byte[] originalCode = memInterface.readBytes(address, originalCodeSize);
             byte[] replacementCode = assembleReplacement(originalCode, payload);
 
-            bool result = DebugBreakProcess(memInterface.processHandle);
+            bool result = DebugPause();
             memInterface.writeBytes(address, replacementCode);
-            int[] debugEvent = new int[32];
-            result = result && WaitForDebugEventEx(debugEvent, 0);
-            result = result && ContinueDebugEvent(debugEvent[1], debugEvent[2], DBG_CONTINUE);
-            return result;
+            return result && DebugUnpause();
         }
 
         public bool insertDataHook(IntPtr address, byte[] payload, IntPtr data, int originalCodeSize = 0) // inserts a hook, but sets the RAX register to hold the IntPtr data
@@ -219,9 +228,32 @@ namespace KHMI
             }
             if (memInterface.processId != 0)
             {
-                result = result && DebugActiveProcessStop(memInterface.processId);
+                result = result && StopDebug();
             }
             return result;
+        }
+
+        public bool StartDebug()
+        {
+            return DebugActiveProcess(memInterface.processId);
+        }
+
+        public bool StopDebug()
+        {
+            return DebugActiveProcessStop(memInterface.processId);
+        }
+
+        public bool ReloadDebug()
+        {
+            return StopDebug() || StartDebug();
+        }
+
+        public MemoryInterface memoryInterface
+        {
+            get
+            {
+                return memInterface;
+            }
         }
     }
 }

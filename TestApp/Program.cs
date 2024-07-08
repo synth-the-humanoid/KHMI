@@ -1,30 +1,57 @@
 ﻿using KHMI;
 
-// simple tester program to showcase the dll - inserts a jump table in the main loop with code that sets world id to 1 (destiny islands) and room id to 0 (seashore)
 
+Console.WriteLine("Press enter to attempt to load Kingdom Hearts Final Mix");
+Console.ReadLine();
 
-MemoryInterface mi = new MemoryInterface(Provider.EPIC, "1.0.0.9"); // creates memory interface for EPIC version 1.0.0.9. affects memory offsets
-bool isLinked = false;
-
-Console.WriteLine("Attempting to link to Kingdom Hearts 1 Final Mix.");
+MemoryInterface memInt = new MemoryInterface(Provider.EPIC, "1.0.0.9", "./offsets.csv");
 
 do
 {
-    Console.WriteLine("Press enter to attempt to link.");
-    Console.ReadLine();
-    isLinked = mi.locateProcess();
-    if (!isLinked)
+    memInt.locateProcess();
+    if (!memInt.isLinked)
     {
-        Console.WriteLine("Failed to locate process.");
+        Console.WriteLine("Did not locate process. Make sure the game is running and press enter to retry.");
+        Console.ReadLine();
     }
 }
-while (!isLinked);
+while(!memInt.isLinked);
 
-Console.WriteLine("Linked to process. Writing code");
-DataInterface di = new DataInterface(mi);
-di.WorldID = 0;
-di.RoomID = 1;
-di.WarpID = 0;
-di.SceneID = 0;
-Console.WriteLine("Success! Press Enter to End!"); // ends the app
+Console.WriteLine("Process located. Press enter to load test mod.");
+Console.ReadLine();
+
+ModInterface mi = new ModInterface(memInt);
+mi.loadMods([new TestMod(mi)]);
+
+Console.WriteLine("Loaded test mod. Press enter to begin running test mod. Afterwards, press enter again to stop KHMI.");
+Console.ReadLine();
+
+while (true)
+{
+    if (Console.KeyAvailable)
+    {
+        ConsoleKeyInfo cki = Console.ReadKey();
+        if (cki.Key == System.ConsoleKey.Enter)
+        {
+            break;
+        }
+    }
+
+    mi.runEvents();
+}
+
+Console.WriteLine("Closing KHMI.");
 mi.close();
+
+class TestMod : KHMod
+{
+    public TestMod(ModInterface mi) : base(mi)
+    {
+        
+    }
+
+    public override void frameUpdate()
+    {
+        Console.WriteLine("Frame Update!\nCurrent WarpID: {0:D}\n", modInterface.dataInterface.WarpID);
+    }
+}
