@@ -1,4 +1,5 @@
 ﻿using KHMI;
+using KHMI.types;
 
 
 Console.WriteLine("Press enter to attempt to load Kingdom Hearts Final Mix");
@@ -21,7 +22,7 @@ Console.WriteLine("Process located. Press enter to load test mod.");
 Console.ReadLine();
 
 ModInterface mi = new ModInterface(memInt);
-mi.loadMods([new TestMod(mi)]);
+new TestMod(mi);
 
 Console.WriteLine("Loaded test mod. Press enter to begin running test mod. Afterwards, press enter again to stop KHMI.");
 Console.ReadLine();
@@ -53,5 +54,10 @@ class TestMod : KHMod
     public override void warpUpdate(int newWarpID)
     {
         Console.WriteLine("WarpID Update!\nNew WarpID: {0:D}\n", newWarpID);
+    }
+
+    public override void playerLoadedEvent(Entity newPlayer)
+    {
+        Console.WriteLine("Sora Loaded!\n{0}", newPlayer.toString());
     }
 }

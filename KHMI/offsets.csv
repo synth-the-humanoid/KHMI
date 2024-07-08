@@ -1,6 +1,7 @@
 --Code Offsets
 MainLoopEntryOffset,epic1.0.0.9,0x10354F
 CodeSeg,epic1.0.0.9,0x103000
+4To8PConvert,epic1.0.0.9,0x38AD70
 
 --Room Loading Offsets
 WorldID,epic1.0.0.9,0x2340DDC

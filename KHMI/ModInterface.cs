@@ -6,26 +6,35 @@
         private CodeInterface codInterface;
         private DataInterface datInterface;
         private KHMIEventHandler evHandler;
-        private KHMod[] modList;
+        private KHMod[] modList = new KHMod[0];
 
         public ModInterface(MemoryInterface mi)
         {
             memInterface = mi;
             codInterface = new CodeInterface(memInterface);
-            datInterface = new DataInterface(memInterface);
             evHandler = new KHMIEventHandler(codInterface);
             createDefaultEvents();
             codInterface.ReloadDebug();
+            datInterface = new DataInterface(this);
         }
 
-        public void loadMods(KHMod[] mods)
+        public void loadMod(KHMod mod)
         {
-            modList = mods;
+            KHMod[] newModList = new KHMod[modList.Length + 1];
+            int i = 0;
+            foreach(KHMod eachMod in modList)
+            {
+                newModList[i++] = eachMod;
+            }
+            newModList[i] = mod;
+            modList = newModList;
         }
+
 
         private void createDefaultEvents()
         {
             evHandler.registerDataEvent("warpEvent", memInterface.nameToAddress("WarpID"), 4);
+            evHandler.registerDataEvent("playerLoadedEvent", memInterface.nameToAddress("PlayerEntity"), 8);
         }
 
         public bool close()
