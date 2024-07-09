@@ -25,7 +25,7 @@
             activeEvents[eventName] = newEvent;
         }
 
-        public Dictionary<string, KHMIEvent> checkUpdate()
+        public Dictionary<string, KHMIEvent> checkUpdate(int waitTime=5)
         {
             Dictionary<string, KHMIEvent> runnableEvents = new Dictionary<string, KHMIEvent>();
             foreach(string eachKey in activeEvents.Keys)
@@ -34,6 +34,7 @@
                 {
                     runnableEvents[eachKey] = activeEvents[eachKey];
                 }
+                Thread.Sleep(waitTime);
             }
             return runnableEvents;
         }

@@ -34,9 +34,10 @@
         private void createDefaultEvents()
         {
             evHandler.registerDataEvent("warpEvent", memInterface.nameToAddress("WarpID"), 4);
-            evHandler.registerDataEvent("playerLoadedEvent", memInterface.nameToAddress("PlayerEntity"), 8);
-            evHandler.registerCodeEvent("frameUpdate", memInterface.nameToAddress("MainLoopEntryOffset"), 14);
+            evHandler.registerDataEvent("playerLoadedEvent", memInterface.nameToAddress("PlayerEntityPtr"), 8);
+            evHandler.registerDataEvent("lockOnEvent", memInterface.nameToAddress("LockOnEntityPtr"), 8);
         }
+
 
         public bool close()
         {
@@ -44,23 +45,15 @@
             return result && memInterface.close();
         }
 
-        public void runEvents()
+        public void runEvents(int waitTime=50)
         {
-            Dictionary<string, KHMIEvent> runnableEvents = evHandler.checkUpdate();
+            Dictionary<string, KHMIEvent> runnableEvents = evHandler.checkUpdate(waitTime);
             foreach(string eventName in  runnableEvents.Keys)
             {
                 bool shouldPause = runnableEvents[eventName].callbackShouldPause;
-                if (shouldPause)
-                {
-                    codInterface.DebugPause();
-                }
                 foreach (KHMod eachMod in modList)
                 {
-                    eachMod.handleEvent(eventName, runnableEvents[eventName].value);
-                }
-                if (shouldPause)
-                {
-                    codInterface.DebugUnpause();
+                    eachMod.handleEvent(eventName, runnableEvents[eventName].value, shouldPause);
                 }
             }
         }

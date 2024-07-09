@@ -14,6 +14,20 @@ namespace KHMI.Types
             address = entityAddress;
         }
 
+        public static Entity[] getLoadedEntities(DataInterface di)
+        {
+            IntPtr firstEntAddress = di.modInterface.memoryInterface.nameToAddress("FirstEntity");
+            IntPtr lastEntPtr = di.modInterface.memoryInterface.nameToAddress("FinalEntityPtr");
+            IntPtr lastEntAddress = (IntPtr)di.modInterface.memoryInterface.readLong(lastEntPtr);
+            int entitySize = (int)(lastEntAddress - firstEntAddress) / 0x4B0;
+            Entity[] entities = new Entity[entitySize];
+            for(int i = 0; i<entitySize; i++)
+            {
+                entities[i] = new Entity(di, firstEntAddress + (i * 0x4B0));
+            }
+            return entities;
+        }
+
         public Vector3 Position
         {
             get

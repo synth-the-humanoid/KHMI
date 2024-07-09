@@ -79,7 +79,6 @@ namespace KHMI
         {
             byte[] prefix = { 0x50, 0x48, 0xB8 };
             byte[] hookAddress = allocHook(originalCode, payload);
-            Console.WriteLine("Hook Address: {0:X}", BitConverter.ToInt32(hookAddress));
             byte[] postfix = { 0xFF, 0xD0 };
 
             byte[] replacement = new byte[prefix.Length + hookAddress.Length + postfix.Length];
@@ -245,7 +244,7 @@ namespace KHMI
 
         public bool ReloadDebug()
         {
-            return StopDebug() || StartDebug();
+            return StopDebug();
         }
 
         public MemoryInterface memoryInterface

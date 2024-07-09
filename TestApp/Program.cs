@@ -46,26 +46,25 @@ mi.close();
 
 class TestMod : KHMod
 {
-    private Entity player;
     public TestMod(ModInterface mi) : base(mi)
     {
-        IntPtr soraPtr = mi.memoryInterface.nameToAddress("PlayerEntity");
-        IntPtr entityPtr = (IntPtr)mi.memoryInterface.readLong(soraPtr);
-        player = new Entity(mi.dataInterface, entityPtr);
+
     }
 
-    public override void frameUpdate()
+    public override void playerLockOn(Entity target)
     {
-        Console.WriteLine("Sora Info:\n{0}\n", player.toString());
+        Console.WriteLine("Locked on! Target Info:\n{0}\n", target.toString());
     }
 
-    public override void warpUpdate(int newWarpID)
+    public override void playerLoaded(Entity newPlayer)
     {
-        Console.WriteLine("WarpID Update!\nNew WarpID: {0:D}\n", newWarpID);
-    }
-
-    public override void playerLoadedEvent(Entity newPlayer)
-    {
-        
+        Thread.Sleep(1000);
+        Entity[] entList = Entity.getLoadedEntities(modInterface.dataInterface);
+        string info = string.Format("Entities Loaded: {0:D}\nEntity List:\n", entList.Length);
+        foreach(Entity e in entList)
+        {
+            info += e.toString();
+        }
+        Console.WriteLine(info);
     }
 }

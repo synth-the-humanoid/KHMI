@@ -51,7 +51,7 @@
             return payload;
         }
 
-        public IntPtr convert4to8(int offset, int maxHold=10)
+        public IntPtr convert4to8(int offset, int maxHold=8)
         {
             mInterface.memoryInterface.writeInt(dataPtr4to8, offset);
             int waitTime = 0;
