@@ -1,5 +1,24 @@
-EntryOffset,epic1.0.0.9,0x10354F
-MainLoop,epic1.0.0.9,0x103480
-WorldID,epic1.0.0.9,0x2340DDC
+--Code Offsets
+MainLoopEntryOffset,epic1.0.0.9,0x10354F
 CodeSeg,epic1.0.0.9,0x103000
-LoadLibraryExW,epic1.0.0.9,0x3B1478
+
+
+--Room Loading Offsets
+WarpTableStartPtr,epic1.0.0.9,0x232E880
+WarpTableEndPtr,epic1.0.0.9,0x232E8C8
+WorldID,epic1.0.0.9,0x2340DDC
+RoomID,epic1.0.0.9,0x2340E44
+WarpID,epic1.0.0.9,0x232E888
+SceneID,epic1.0.0.9,0x2340E48
+ARD,epic1.0.0.9,0x232E840
+
+--Entity Offsets
+PlayerEntityPtr,epic1.0.0.9,0x2D37C00
+Party1EntityPtr,epic1.0.0.9,0x2D37C08
+Party2EntityPtr,epic1.0.0.9,0x2D37C10
+FirstEntity,epic1.0.0.9,0x2D37C20
+FinalEntityPtr,epic1.0.0.9,0x2D37C18
+LockOnEntityPtr,epic1.0.0.9,0x25387F0
+
+--Etc
+4to8Base,epic1.0.0.9,0x2EE46B0
