@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace KHMI
@@ -146,6 +147,23 @@ namespace KHMI
         public bool writeDouble(IntPtr address, double value)
         {
             return writeBytes(address, BitConverter.GetBytes(value));
+        }
+
+        public Vector3 readVector3(IntPtr address)
+        {
+            float x = readFloat(address);
+            float y = readFloat(address + 0x4);
+            float z = readFloat(address + 0x8);
+            return new Vector3(x, y, z);
+        }
+
+        public bool writeVector3(IntPtr address, Vector3 v)
+        {
+            bool result = true;
+            result = result && writeFloat(address, v.X);
+            result = result && writeFloat(address + 0x4, v.Y);
+            result = result && writeFloat(address + 0x8, v.Z);
+            return result;
         }
 
         public bool close() // closes open memory + handles, returns true if it worked

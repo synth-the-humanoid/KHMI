@@ -5,62 +5,26 @@
     public class DataInterface
     {
         private ModInterface mInterface;
-        private IntPtr dataPtr4to8;
-        private KHMIEvent conv4to8ev;
 
         public DataInterface(ModInterface mi)
         {
             if (mi != null)
             {
-                mInterface = mi;
-                conv4to8ev = hook4to8PConvert();
-                
+                mInterface = mi;                
             }
         }
 
-        private KHMIEvent hook4to8PConvert()
+        public IntPtr convert4to8(int offset)
         {
-            dataPtr4to8 = mInterface.codeInterface.allocDataRegion(12);
-            byte[] payload = assemble4to8PConvert(dataPtr4to8);
-            mInterface.codeInterface.insertDataHook(mInterface.memoryInterface.nameToAddress("MainLoopEntryOffset"), payload, dataPtr4to8, 14);
-            return new KHMIEvent(mInterface.codeInterface, dataPtr4to8+4, 8);
-        }
-
-        private byte[] assemble4to8PConvert(IntPtr data)
-        {
-            byte[] prefix = { 0x51, 0x52, 0x48, 0x31, 0xC9, 0x8B, 0x08, 0x50, 0x48, 0xB8 };
-            byte[] functionPtr = BitConverter.GetBytes(mInterface.memoryInterface.nameToAddress("4To8PConvert"));
-            byte[] postfix = { 0xFF, 0xD0, 0x59, 0x48, 0x89, 0x41, 0x04, 0x5A, 0x59 };
-
-            byte[] payload = new byte[prefix.Length + functionPtr.Length + postfix.Length];
-            
-            int i = 0;
-            foreach(byte b in prefix)
+            if (offset == 0)
             {
-                payload[i++] = b;
+                return 0;
             }
-            foreach (byte b in functionPtr)
-            {
-                payload[i++] = b;
-            }
-            foreach (byte b in postfix)
-            {
-                payload[i++] = b;
-            }
-
-            return payload;
-        }
-
-        public IntPtr convert4to8(int offset, int maxHold=8)
-        {
-            mInterface.memoryInterface.writeInt(dataPtr4to8, offset);
-            int waitTime = 0;
-            while (waitTime < maxHold && !conv4to8ev.checkUpdate())
-            {
-                Thread.Sleep(1);
-                waitTime++;
-            }
-            return (IntPtr)BitConverter.ToInt64(conv4to8ev.value);
+            IntPtr baseAddressArray = mInterface.memoryInterface.nameToAddress("4to8Base");
+            int selectedBase = (offset & 0x7fffffff) >> 0x19;
+            IntPtr baseAddress = (IntPtr)mInterface.memoryInterface.readLong(baseAddressArray + (8 * selectedBase));
+            IntPtr lowerBits = offset & 0x1ffffff;
+            return baseAddress | lowerBits;
         }
 
         public int WarpID

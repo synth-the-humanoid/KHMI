@@ -53,18 +53,11 @@ class TestMod : KHMod
 
     public override void playerLockOn(Entity target)
     {
-        Console.WriteLine("Locked on! Target Info:\n{0}\n", target.toString());
+        
     }
 
     public override void playerLoaded(Entity newPlayer)
     {
-        Thread.Sleep(1000);
-        Entity[] entList = Entity.getLoadedEntities(modInterface.dataInterface);
-        string info = string.Format("Entities Loaded: {0:D}\nEntity List:\n", entList.Length);
-        foreach(Entity e in entList)
-        {
-            info += e.toString();
-        }
-        Console.WriteLine(info);
+        Console.WriteLine("Player Loaded!\n{0}", newPlayer);
     }
 }
