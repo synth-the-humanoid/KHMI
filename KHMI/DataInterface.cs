@@ -27,53 +27,6 @@
             return baseAddress | lowerBits;
         }
 
-        public int WarpID
-        {
-            get
-            {
-                return mInterface.memoryInterface.readInt(mInterface.memoryInterface.nameToAddress("WarpID"));
-            }
-            set
-            {
-                mInterface.memoryInterface.writeInt(mInterface.memoryInterface.nameToAddress("WarpID"), value);
-            }
-        }
-
-        public int RoomID
-        {
-            get
-            {
-                return mInterface.memoryInterface.readInt(mInterface.memoryInterface.nameToAddress("RoomID"));
-            }
-            set
-            {
-                mInterface.memoryInterface.writeInt(mInterface.memoryInterface.nameToAddress("RoomID"), value);
-            }
-        }
-
-        public int SceneID
-        {
-            get
-            {
-                return mInterface.memoryInterface.readInt(mInterface.memoryInterface.nameToAddress("SceneID"));
-            }
-            set
-            {
-                mInterface.memoryInterface.writeInt(mInterface.memoryInterface.nameToAddress("SceneID"), value);
-            }
-        }
-
-        public int WorldID
-        {
-            get
-            {
-                return mInterface.memoryInterface.readInt(mInterface.memoryInterface.nameToAddress("WorldID"));
-            }
-            set
-            {
-                mInterface.memoryInterface.writeInt(mInterface.memoryInterface.nameToAddress("WorldID"), value);
-            }
-        }
 
         public ModInterface modInterface
         {

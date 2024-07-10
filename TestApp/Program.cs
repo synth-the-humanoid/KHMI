@@ -1,5 +1,6 @@
 ﻿using KHMI;
 using KHMI.Types;
+using System.Numerics;
 
 
 Console.WriteLine("Press enter to attempt to load Kingdom Hearts Final Mix");
@@ -51,13 +52,36 @@ class TestMod : KHMod
 
     }
 
-    public override void playerLockOn(Entity target)
+    public override void warpTableUpdate(WarpTable wt)
     {
-        
+        Warp[] warps = wt.Warps;
+        Random r = new Random();
+        r.Shuffle(warps);
+        for (int i = 0; i < warps.Length; i++)
+        {
+            Warp current = wt.Warps[i];
+            current.PlayerPosition = warps[i].PlayerPosition;
+            current.PlayerRotation = warps[i].PlayerRotation;
+            current.Party1Position = warps[i].Party1Position;
+            current.Party1Rotation = warps[i].Party1Rotation;
+            current.Party2Position = warps[i].Party2Position;
+            current.Party2Rotation = warps[i].Party2Rotation;
+        }
     }
 
     public override void playerLoaded(Entity newPlayer)
     {
-        Console.WriteLine("Player Loaded!\n{0}", newPlayer);
+        Entity[] entities = Entity.getLoadedEntities(modInterface.dataInterface);
+        Vector3[] positions = new Vector3[entities.Length];
+        for(int i = 0; i < positions.Length; i++)
+        {
+            positions[i] = entities[i].Position;
+        }
+        Random r = new Random();
+        r.Shuffle(positions);
+        for(int i = 0; i < positions.Length; i++)
+        {
+            entities[i].Position = positions[i];
+        }
     }
 }

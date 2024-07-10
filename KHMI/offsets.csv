@@ -4,6 +4,8 @@ CodeSeg,epic1.0.0.9,0x103000
 
 
 --Room Loading Offsets
+WarpTableStartPtr,epic1.0.0.9,0x232E880
+WarpTableEndPtr,epic1.0.0.9,0x232E8C8
 WorldID,epic1.0.0.9,0x2340DDC
 RoomID,epic1.0.0.9,0x2340E44
 WarpID,epic1.0.0.9,0x232E888

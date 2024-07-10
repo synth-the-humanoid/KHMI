@@ -36,6 +36,7 @@
             evHandler.registerDataEvent("warpEvent", memInterface.nameToAddress("WarpID"), 4);
             evHandler.registerDataEvent("playerLoadedEvent", memInterface.nameToAddress("PlayerEntityPtr"), 8);
             evHandler.registerDataEvent("lockOnEvent", memInterface.nameToAddress("LockOnEntityPtr"), 8);
+            evHandler.registerDataEvent("warpTableEvent", memInterface.nameToAddress("WarpTableStartPtr"), 8);
         }
 
 

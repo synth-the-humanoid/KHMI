@@ -47,6 +47,12 @@ namespace KHMI
                         playerLockOn(new Entity(modInterface.dataInterface, entityAddress));
                     }
                     break;
+                case "warpTableEvent":
+                    IntPtr warpTableEndPtr = modInterface.memoryInterface.nameToAddress("WarpTableEndPtr");
+                    IntPtr warpTableEnd = (IntPtr)modInterface.memoryInterface.readLong(warpTableEndPtr);
+                    IntPtr warpTableStart = (IntPtr)BitConverter.ToInt64(data);
+                    warpTableUpdate(new WarpTable(modInterface.dataInterface, warpTableStart, warpTableEnd));
+                    break;
                 default:
                     break;
             }
@@ -63,5 +69,6 @@ namespace KHMI
         public virtual void playerUnloaded() { }
         public virtual void playerLockOff() { }
         public virtual void playerLockOn(Entity target) { }
+        public virtual void warpTableUpdate(WarpTable wt) { }
     }
 }
