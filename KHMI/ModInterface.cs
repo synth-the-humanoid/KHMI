@@ -33,10 +33,26 @@
 
         private void createDefaultEvents()
         {
+            createDefaultHooks();
             evHandler.registerDataEvent("warpEvent", memInterface.nameToAddress("WarpID"), 4);
             evHandler.registerDataEvent("playerLoadedEvent", memInterface.nameToAddress("PlayerEntityPtr"), 8);
             evHandler.registerDataEvent("lockOnEvent", memInterface.nameToAddress("LockOnEntityPtr"), 8);
             evHandler.registerDataEvent("warpTableEvent", memInterface.nameToAddress("WarpTableStartPtr"), 8);
+        }
+
+        private void createDefaultHooks()
+        {
+            IntPtr onHPChangeData = injectOnHPChange();
+            evHandler.registerDataEvent("onHPChange", onHPChangeData, 9);
+        }
+
+        private IntPtr injectOnHPChange()
+        {
+            IntPtr dataRegion = codInterface.allocDataRegion(9);
+            byte[] code = { 0x83, 0x30, 0x01, 0x48, 0x89, 0x70, 0x01 };
+            IntPtr target = memInterface.nameToAddress("onHPChangeHook");
+            codInterface.insertDataHook(target, code, dataRegion, 13, false);
+            return dataRegion;
         }
 
 

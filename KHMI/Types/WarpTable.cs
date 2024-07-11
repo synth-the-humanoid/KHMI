@@ -1,37 +1,18 @@
 ﻿namespace KHMI.Types
 {
-    public class WarpTable : KHMIType
+    public class WarpTable : KHMITypeTable
     {
-        private IntPtr endAddress;
-        public WarpTable(DataInterface di, IntPtr addressStart, IntPtr addressEnd=0) : base(di, addressStart)
-        {
-            if (addressEnd != 0)
-            {
-                endAddress = addressEnd;
-            }
-            else
-            {
-                IntPtr endAddressPtr = memoryInterface.nameToAddress("WarpTableEndPtr");
-                endAddress = (IntPtr)memoryInterface.readLong(endAddressPtr);
-            }
-        }
-
-        public int Size
-        {
-            get
-            {
-                return (int)(endAddress - address) / 0x40;
-            }
-        }
+        public WarpTable(DataInterface di, IntPtr addressStart, IntPtr addressEnd) : base(di, addressStart, addressEnd, 0x40) { }
 
         public Warp[] Warps
         {
             get
             {
-                Warp[] warps = new Warp[Size];
+                IntPtr[] addresses = Addresses;
+                Warp[] warps = new Warp[addresses.Length];
                 for(int i = 0; i < warps.Length; i++)
                 {
-                    warps[i] = new Warp(dataInterface, address + (i * 0x40));
+                    warps[i] = new Warp(dataInterface, addresses[i]);
                 }
                 return warps;
             }

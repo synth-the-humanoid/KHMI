@@ -53,6 +53,15 @@ namespace KHMI
                     IntPtr warpTableStart = (IntPtr)BitConverter.ToInt64(data);
                     warpTableUpdate(new WarpTable(modInterface.dataInterface, warpTableStart, warpTableEnd));
                     break;
+                case "onHPChange":
+                    byte[] entityPtrBytes = new byte[8];
+                    for(int i = 0; i < entityPtrBytes.Length; i++)
+                    {
+                        entityPtrBytes[i] = data[i + 1];
+                    }
+                    Entity target = new Entity(modInterface.dataInterface, (IntPtr)BitConverter.ToInt64(entityPtrBytes));
+                    onHPChange(target);
+                    break;
                 default:
                     break;
             }
@@ -70,5 +79,6 @@ namespace KHMI
         public virtual void playerLockOff() { }
         public virtual void playerLockOn(Entity target) { }
         public virtual void warpTableUpdate(WarpTable wt) { }
+        public virtual void onHPChange(Entity target) { }
     }
 }

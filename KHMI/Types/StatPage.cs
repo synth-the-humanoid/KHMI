@@ -76,9 +76,27 @@
             }
         }
 
+        public PartyStatPage PartyStatPage
+        {
+            get
+            {
+                IntPtr pspPtr = (IntPtr)memoryInterface.readLong(address + 0xC8);
+                if (pspPtr == 0)
+                {
+                    return null;
+                }
+                return new PartyStatPage(dataInterface, pspPtr);
+            }
+        }
+
         public override string ToString()
         {
-            return string.Format("StatPage:\nHP: {0:D}/{1:D}\nMP: {2:D}/{3:D}\nStrength: {4:D}\nDefense: {5:D}\n", CurrentHP, MaxHP, CurrentMP, MaxMP, Strength, Defense);
+            string pspStr = "";
+            if (PartyStatPage != null)
+            {
+                pspStr = PartyStatPage.ToString();
+            }
+            return string.Format("StatPage:\nHP: {0:D}/{1:D}\nMP: {2:D}/{3:D}\nStrength: {4:D}\nDefense: {5:D}\n{6}", CurrentHP, MaxHP, CurrentMP, MaxMP, Strength, Defense, pspStr);
         }
     }
 }

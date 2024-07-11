@@ -40,7 +40,7 @@ namespace KHMI
             return result && ContinueDebugEvent(debugEvent[1], debugEvent[2], DBG_CONTINUE);
         }
 
-        private byte[] assembleHook(byte[] originalCode, byte[] payload) // creates a byte array of assembly code that includes code we've overwritten to jump to this array, the payload, and a template to preserve registers and return
+        private byte[] assembleHook(byte[] originalCode, byte[] payload, bool originalCodeFirst=true) // creates a byte array of assembly code that includes code we've overwritten to jump to this array, the payload, and a template to preserve registers and return
         {
             byte[] prefix = { 0x58, 0xFF, 0x34, 0x24, 0x48, 0x89, 0x44, 0x24, 0x08, 0x58 };
             byte[] postfix = { 0xC3 };
@@ -50,13 +50,27 @@ namespace KHMI
             {
                 hook[i++] = b;
             }
-            foreach (byte b in originalCode)
+            if (originalCodeFirst)
             {
-                hook[i++] = b;
+                foreach (byte b in originalCode)
+                {
+                    hook[i++] = b;
+                }
+                foreach (byte b in payload)
+                {
+                    hook[i++] = b;
+                }
             }
-            foreach(byte b in payload)
+            else
             {
-                hook[i++] = b;
+                foreach (byte b in payload)
+                {
+                    hook[i++] = b;
+                }
+                foreach (byte b in originalCode)
+                {
+                    hook[i++] = b;
+                }
             }
             foreach(byte b in postfix)
             {
@@ -66,19 +80,19 @@ namespace KHMI
             return hook;
         }
 
-        private byte[] allocHook(byte[] originalCode, byte[] payload) // calls assemble hook, allocates memory for the result and stores it. returns the address in a byte[] to be inserted into a jmp/call statement
+        private byte[] allocHook(byte[] originalCode, byte[] payload, bool originalCodeFirst=true) // calls assemble hook, allocates memory for the result and stores it. returns the address in a byte[] to be inserted into a jmp/call statement
         {
-            byte[] hook = assembleHook(originalCode, payload);
+            byte[] hook = assembleHook(originalCode, payload, originalCodeFirst);
             IntPtr hookAddress = MemoryInterface.VirtualAllocEx(memInterface.processHandle, 0, hook.Length, MemoryInterface.MEM_COMMIT, MemoryInterface.PAGE_EXECUTE_READWRITE);
             memInterface.writeBytes(hookAddress, hook);
             openMemory.Append<IntPtr>(hookAddress);
             return BitConverter.GetBytes(hookAddress);
         }
 
-        private byte[] assembleReplacement(byte[] originalCode, byte[] payload) // returns a byte[] of code that can be used to overwrite originalCode. if originalcode is less than 13 bytes, this array will be too large
+        private byte[] assembleReplacement(byte[] originalCode, byte[] payload, bool originalCodeFirst = true) // returns a byte[] of code that can be used to overwrite originalCode. if originalcode is less than 13 bytes, this array will be too large
         {
             byte[] prefix = { 0x50, 0x48, 0xB8 };
-            byte[] hookAddress = allocHook(originalCode, payload);
+            byte[] hookAddress = allocHook(originalCode, payload, originalCodeFirst);
             byte[] postfix = { 0xFF, 0xD0 };
 
             byte[] replacement = new byte[prefix.Length + hookAddress.Length + postfix.Length];
@@ -123,7 +137,7 @@ namespace KHMI
             return address;
         }
 
-        public bool insertHook(IntPtr address, byte[] payload, int originalCodeSize=0) // inserts a jump statement at address which preserves originalCode of the length of originalCodeSize, or the size of payload if it is 0. size should be 13 or greater
+        public bool insertHook(IntPtr address, byte[] payload, int originalCodeSize=0, bool originalCodeFirst = true) // inserts a jump statement at address which preserves originalCode of the length of originalCodeSize, or the size of payload if it is 0. size should be 13 or greater
         {
             if(originalCodeSize == 0)
             {
@@ -131,14 +145,14 @@ namespace KHMI
             }
 
             byte[] originalCode = memInterface.readBytes(address, originalCodeSize);
-            byte[] replacementCode = assembleReplacement(originalCode, payload);
+            byte[] replacementCode = assembleReplacement(originalCode, payload, originalCodeFirst);
 
             bool result = DebugPause();
             memInterface.writeBytes(address, replacementCode);
             return result && DebugUnpause();
         }
 
-        public bool insertDataHook(IntPtr address, byte[] payload, IntPtr data, int originalCodeSize = 0) // inserts a hook, but sets the RAX register to hold the IntPtr data
+        public bool insertDataHook(IntPtr address, byte[] payload, IntPtr data, int originalCodeSize = 0, bool originalCodeFirst = true) // inserts a hook, but sets the RAX register to hold the IntPtr data
         {
             byte[] prefix = { 0x50, 0x48, 0xB8 };
             byte[] dataBytes = BitConverter.GetBytes(data);
@@ -164,10 +178,10 @@ namespace KHMI
                 newPayload[i++] = b;
             }
 
-            return insertHook(address, newPayload, originalCodeSize);
+            return insertHook(address, newPayload, originalCodeSize, originalCodeFirst);
         }
 
-        public bool insertMultiHook(IntPtr address, byte[][] payloads, int originalCodeSize=0) // inserts multiple payloads at one address. runs them in order of appearance in the array
+        public bool insertMultiHook(IntPtr address, byte[][] payloads, int originalCodeSize=0, bool originalCodeFirst = true) // inserts multiple payloads at one address. runs them in order of appearance in the array
         {
             byte[] data = new byte[IntPtr.Size * (payloads.Length + 1)];
             int iData = 0;
@@ -204,7 +218,7 @@ namespace KHMI
             IntPtr jumpTableAddress = allocDataRegion(data.Length);
             MemoryInterface.WriteProcessMemory(memInterface.processHandle, jumpTableAddress, data, data.Length, ref bytesWritten);
             byte[] multiLoader = { 0x48, 0x83, 0x38, 0x00, 0x0F, 0x84, 0x08, 0x00, 0x00, 0x00, 0xFF, 0x10, 0x48, 0x83, 0xC0, 0x08, 0xEB, 0xEE };
-            return insertDataHook(address, multiLoader, jumpTableAddress, originalCodeSize);
+            return insertDataHook(address, multiLoader, jumpTableAddress, originalCodeSize, originalCodeFirst);
         }
 
         public bool isLinked
