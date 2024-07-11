@@ -60,6 +60,10 @@ namespace KHMI
                         entityPtrBytes[i] = data[i + 1];
                     }
                     Entity target = new Entity(modInterface.dataInterface, (IntPtr)BitConverter.ToInt64(entityPtrBytes));
+                    if(target.StatPage.CurrentHP == 0)
+                    {
+                        onEntityDeath(target);
+                    }
                     onHPChange(target);
                     break;
                 default:
@@ -80,5 +84,6 @@ namespace KHMI
         public virtual void playerLockOn(Entity target) { }
         public virtual void warpTableUpdate(WarpTable wt) { }
         public virtual void onHPChange(Entity target) { }
+        public virtual void onEntityDeath(Entity deceased) { }
     }
 }

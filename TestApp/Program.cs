@@ -52,8 +52,24 @@ class TestMod : KHMod
 
     }
 
-    public override void playerLoaded(Entity player)
+    public override void onHPChange(Entity target)
     {
-        Console.WriteLine(player);
+        Console.WriteLine("Entity {0}'s HP changed to {1:D}\n", target.Actor.Name, target.StatPage.CurrentHP);
+    }
+    public override void onEntityDeath(Entity deceased)
+    {
+        Console.WriteLine("Entity {0} deceased. Entities warped to their deathspot to mourn.", deceased.Actor.Name);
+        Vector3 pos = deceased.Position;
+        IntPtr firstEnt = modInterface.memoryInterface.nameToAddress("FirstEntity");
+        IntPtr lastEntPtr = modInterface.memoryInterface.nameToAddress("FinalEntityPtr");
+        IntPtr lastEnt = (IntPtr)modInterface.memoryInterface.readLong(lastEntPtr);
+        Entity[] allEntities = new EntityTable(modInterface.dataInterface, firstEnt, lastEnt).Entities;
+        foreach(Entity e in allEntities)
+        {
+            if (e.Actor.Movability != 0)
+            {
+                e.Position = pos;
+            }
+        }
     }
 }
