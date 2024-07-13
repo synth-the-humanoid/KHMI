@@ -7,9 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="offsets.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\KHMI\KHMI.csproj" />
   </ItemGroup>
 
 </Project>
