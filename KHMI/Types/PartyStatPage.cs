@@ -59,6 +59,8 @@
                 memoryInterface.writeByte(address + 0x4, value);
             }
         }
+
+
         public byte MaxAP
         {
             get

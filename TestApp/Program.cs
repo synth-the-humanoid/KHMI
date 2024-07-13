@@ -52,23 +52,40 @@ class TestMod : KHMod
 
     }
 
+    private void setMaxHP(Entity e, int newMaxHP)
+    {
+        e.StatPage.MaxHP = newMaxHP;
+        PartyStatPage psp = e.StatPage.PartyStatPage;
+        if (psp != null)
+        {
+            psp.MaxHP = (byte)newMaxHP;
+        }
+        Console.WriteLine("{0}'s Max HP cut to {1:D}", e.Actor.Name, newMaxHP);
+    }
+
     public override void onHPChange(Entity target)
     {
-        Console.WriteLine("Entity {0}'s HP changed to {1:D}\n", target.Actor.Name, target.StatPage.CurrentHP);
+        if (target.IsPartyMember)
+        {
+            int newMaxHP = (target.StatPage.MaxHP + target.StatPage.CurrentHP) / 2;
+            setMaxHP(target, newMaxHP);
+        }
+        else
+        {
+            Entity player = Entity.getPlayer(modInterface.dataInterface);
+            setMaxHP(player, player.StatPage.MaxHP + 1);
+        }
     }
+
     public override void onEntityDeath(Entity deceased)
     {
-        Console.WriteLine("Entity {0} deceased. Entities warped to their deathspot to mourn.", deceased.Actor.Name);
-        Vector3 pos = deceased.Position;
-        IntPtr firstEnt = modInterface.memoryInterface.nameToAddress("FirstEntity");
-        IntPtr lastEntPtr = modInterface.memoryInterface.nameToAddress("FinalEntityPtr");
-        IntPtr lastEnt = (IntPtr)modInterface.memoryInterface.readLong(lastEntPtr);
-        Entity[] allEntities = new EntityTable(modInterface.dataInterface, firstEnt, lastEnt).Entities;
-        foreach(Entity e in allEntities)
+        if (deceased.IsPartyMember)
         {
-            if (e.Actor.Movability != 0)
+            if(!deceased.IsPlayer)
             {
-                e.Position = pos;
+                Entity player = Entity.getPlayer(modInterface.dataInterface);
+                setMaxHP(player, player.StatPage.MaxHP * 2 / 3);
+                player.StatPage.CurrentHP = Math.Min(player.StatPage.CurrentHP, player.StatPage.MaxHP);
             }
         }
     }

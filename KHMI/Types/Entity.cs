@@ -6,6 +6,17 @@ namespace KHMI.Types
     {
         public Entity(DataInterface di, IntPtr address) : base(di, address) { }
 
+        public static Entity getPlayer(DataInterface di)
+        {
+            IntPtr playerPtrAddress = di.modInterface.memoryInterface.nameToAddress("PlayerEntityPtr");
+            if (playerPtrAddress != IntPtr.Zero)
+            {
+                IntPtr playerAddress = (IntPtr)di.modInterface.memoryInterface.readLong(playerPtrAddress);
+                return new Entity(di, playerAddress);
+            }
+            return null;
+        }
+
         public Vector3 Position
         {
             get
@@ -66,6 +77,30 @@ namespace KHMI.Types
                     return null;
                 }
                 return new PortraitFrame(dataInterface, dataInterface.convert4to8(offset));
+            }
+        }
+
+        public bool IsPartyMember
+        {
+            get
+            {
+                if (StatPage != null)
+                {
+                    if (StatPage.PartyStatPage != null)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        public bool IsPlayer
+        {
+            get
+            {
+                Entity player = Entity.getPlayer(dataInterface);
+                return address == player.address;
             }
         }
 

@@ -5,12 +5,20 @@ namespace KHMI
     public class KHMod
     {
         protected ModInterface modInterface;
-        private IntPtr result4to8P = IntPtr.Zero;
+        private int loadedWarp;
+        private int loadedWorld;
 
         public KHMod(ModInterface mi)
         {
             modInterface = mi;
             modInterface.loadMod(this);
+            updateLoadedRoomInfo();
+        }
+
+        private void updateLoadedRoomInfo()
+        {
+            loadedWarp = modInterface.memoryInterface.readInt(modInterface.memoryInterface.nameToAddress("WarpID"));
+            loadedWorld = modInterface.memoryInterface.readInt(modInterface.memoryInterface.nameToAddress("WorldID"));
         }
 
         internal void handleEvent(string eventName, byte[] data, bool shouldPause)
@@ -54,17 +62,23 @@ namespace KHMI
                     warpTableUpdate(new WarpTable(modInterface.dataInterface, warpTableStart, warpTableEnd));
                     break;
                 case "onHPChange":
-                    byte[] entityPtrBytes = new byte[8];
-                    for(int i = 0; i < entityPtrBytes.Length; i++)
+                    if(modInterface.memoryInterface.readInt(modInterface.memoryInterface.nameToAddress("WorldID")) == loadedWorld)
                     {
-                        entityPtrBytes[i] = data[i + 1];
+                        if(modInterface.memoryInterface.readInt(modInterface.memoryInterface.nameToAddress("WarpID")) == loadedWarp)
+                        {
+                            byte[] entityPtrBytes = new byte[8];
+                            for (int i = 0; i < entityPtrBytes.Length; i++)
+                            {
+                                entityPtrBytes[i] = data[i + 1];
+                            }
+                            Entity target = new Entity(modInterface.dataInterface, (IntPtr)BitConverter.ToInt64(entityPtrBytes));
+                            if (target.StatPage.CurrentHP == 0)
+                            {
+                                onEntityDeath(target);
+                            }
+                            onHPChange(target);
+                        }
                     }
-                    Entity target = new Entity(modInterface.dataInterface, (IntPtr)BitConverter.ToInt64(entityPtrBytes));
-                    if(target.StatPage.CurrentHP == 0)
-                    {
-                        onEntityDeath(target);
-                    }
-                    onHPChange(target);
                     break;
                 default:
                     break;
@@ -75,6 +89,8 @@ namespace KHMI
                 modInterface.codeInterface.DebugUnpause();
                 modInterface.codeInterface.StopDebug();
             }
+
+            updateLoadedRoomInfo();
         }
 
         public virtual void warpUpdate(int newWarpID) { }
