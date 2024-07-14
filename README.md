@@ -1,4 +1,4 @@
-Work in Progress Modding API for Kingdom Hearts Final Mix.
+Work in Progress Modding API for Kingdom Hearts Final Mix. Built to be version-independent, however currently only supports EPIC version 1.0.0.9. New offsets will be added to KHMI/offsets.csv as they are found.
 
 Prebuilt files are in LatestRelease. You only need either ModManager or ModManagerCLI. Currently, only ModManagerCLI supports command-line messages, so mods that use this feature heavily should ask users to use that version.
 
