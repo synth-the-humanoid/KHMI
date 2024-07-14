@@ -48,5 +48,21 @@ namespace TestDLLMod
                 }
             }
         }
+
+        private void setIsoView()
+        {
+            IntPtr cameraStyle = modInterface.memoryInterface.nameToAddress("CameraStyle");
+            modInterface.memoryInterface.writeInt(cameraStyle, 10);
+        }
+
+        public override void playerLockOff()
+        {
+            setIsoView();
+        }
+
+        public override void playerLoaded(Entity newPlayer)
+        {
+            setIsoView();
+        }
     }
 }
