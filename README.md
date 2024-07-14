@@ -1,5 +1,7 @@
 Work in Progress Modding API for Kingdom Hearts Final Mix.
 
+Download all the files in either LatestRelease/ModManager or LatestRelease/ModManagerCLI and run the respective .exe file to play with the test mod
+
 
 After including the .dll in your project, use the MemoryInterface class to edit game memory. Alternatively, use CodeInterface to inject assembly code. offsets.csv stores all the offsets used.
 
