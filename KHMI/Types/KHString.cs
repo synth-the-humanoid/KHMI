@@ -93,5 +93,10 @@
                 memoryInterface.writeBytes(address, data);
             }
         }
+
+        public override string ToString()
+        {
+            return ASCII;
+        }
     }
 }

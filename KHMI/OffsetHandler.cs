@@ -1,6 +1,7 @@
 ﻿namespace KHMI
 {
     public enum Provider { EPIC, STEAM };
+
     internal class OffsetHandler
     {
         private Dictionary<string, int> offsets = new Dictionary<string, int>();

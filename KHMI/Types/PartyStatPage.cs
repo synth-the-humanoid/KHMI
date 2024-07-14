@@ -60,7 +60,18 @@
             }
         }
 
-
+        public byte CurrentAP
+        {
+            get
+            {
+                byte spentAP = 0;
+                foreach(Ability a in Abilities)
+                {
+                    spentAP += a.APCost;
+                }
+                return (byte)(MaxAP - spentAP);
+            }
+        }
         public byte MaxAP
         {
             get
@@ -167,7 +178,7 @@
             }
         }
 
-        public byte[] Abilities
+        public byte[] AbilityBytes
         {
             get
             {
@@ -176,6 +187,38 @@
             set
             {
                 memoryInterface.writeBytes(address + 0x40, value);
+            }
+        }
+
+        public int AbilityCount
+        {
+            get
+            {
+                int i = 0;
+                foreach(byte b in AbilityBytes)
+                {
+                    if (b == 0)
+                    {
+                        break;
+                    }
+                    i++;
+                }
+                return i;
+            }
+        }
+
+        public Ability[] Abilities
+        {
+            get
+            {
+                byte[] bytes = AbilityBytes;
+                Ability[] abilities = new Ability[AbilityCount];
+                for(int i = 0; i < abilities.Length; i++)
+                {
+                    abilities[i] = Ability.FromID(dataInterface, bytes[i]);
+                }
+
+                return abilities;
             }
         }
 
@@ -209,10 +252,10 @@
             }
             itemStr = string.Format("Items: {0}\n", itemStr);
             string abStr = "";
-            byte[] abilities = Abilities;
-            foreach(byte b in abilities)
+            Ability[] abilities = Abilities;
+            foreach(Ability a in abilities)
             {
-                abStr = string.Format("{0} {1:X}", abStr, b);
+                abStr = string.Format("{0}{1}", abStr, a.ToString());
             }
             abStr = string.Format("Abilities: {0}\n", abStr);
 

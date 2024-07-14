@@ -7,6 +7,8 @@
         private DataInterface datInterface;
         private KHMIEventHandler evHandler;
         private KHMod[] modList = new KHMod[0];
+        private bool isClosed = false;
+
 
         public ModInterface(MemoryInterface mi)
         {
@@ -62,10 +64,12 @@
             return result && memInterface.close();
         }
 
+
+
         public void runEvents(int waitTime=50)
         {
             Dictionary<string, KHMIEvent> runnableEvents = evHandler.checkUpdate(waitTime);
-            foreach(string eventName in  runnableEvents.Keys)
+            foreach (string eventName in runnableEvents.Keys)
             {
                 bool shouldPause = runnableEvents[eventName].callbackShouldPause;
                 foreach (KHMod eachMod in modList)

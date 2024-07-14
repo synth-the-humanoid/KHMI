@@ -9,6 +9,7 @@ namespace KHMI
         private ModInterface modInterface;
         private Provider prov;
         private string vString;
+        private bool isClosed = false;
 
         public ModLoader(Provider p, string version, string offsetFile="./offsets.csv", string modsFile="./mods/")
         {
@@ -53,12 +54,24 @@ namespace KHMI
 
         public void runEvents(int waitTime=50)
         {
-            modInterface.runEvents(waitTime);
+            if (!isClosed)
+            {
+                modInterface.runEvents(waitTime);
+            }
         }
 
         public bool close()
         {
+            isClosed = true;
             return modInterface.close();
+        }
+
+        public bool Runnable
+        {
+            get
+            {
+                return !isClosed;
+            }
         }
     }
 }
