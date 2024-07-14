@@ -1,15 +1,5 @@
 Work in Progress Modding API for Kingdom Hearts Final Mix.
 
-Download all the files in either LatestRelease/ModManager or LatestRelease/ModManagerCLI and run the respective .exe file to play with the test mod
+Prebuilt files are in LatestRelease. You only need either ModManager or ModManagerCLI. Currently, only ModManagerCLI supports command-line messages, so mods that use this feature heavily should ask users to use that version.
 
-
-After including the .dll in your project, use the MemoryInterface class to edit game memory. Alternatively, use CodeInterface to inject assembly code. offsets.csv stores all the offsets used.
-
-offsets.csv format:
-
-OffsetName,(provider)(version),0x01020304,(provider)(version),0x05060708
-
-
-each new line in offsets.csv is a new offset. valid providers currently are "epic" or "steam". going to finish the offsets for "epic1.0.0.9" before anything else.
-
-"--" or "//" at the start of a line in offsets.csv will denote a comment
+After downloading the folder for whichever version you'd like, run the .exe file in that folder. Start Kingdom Hearts Final Mix and link the program with the game for the first time. After this, you can disconnect by following the instructions on-screen for whichever version you have acquired and you'll notice that a "mods" folder exists in the same folder the .exe file is in. This is where you will place any .dll mod files you come across.
