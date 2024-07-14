@@ -7,6 +7,7 @@ namespace KHMI
         protected ModInterface modInterface;
         private int loadedWarp;
         private int loadedWorld;
+        private Dictionary<string, int> hpCache = new Dictionary<string, int>();
 
         public KHMod(ModInterface mi)
         {
@@ -19,6 +20,22 @@ namespace KHMI
         {
             loadedWarp = modInterface.memoryInterface.readInt(modInterface.memoryInterface.nameToAddress("WarpID"));
             loadedWorld = modInterface.memoryInterface.readInt(modInterface.memoryInterface.nameToAddress("WorldID"));
+            loadHPCache();
+        }
+
+        private void loadHPCache()
+        {
+            hpCache = new Dictionary<string, int>();
+            IntPtr firstEntity = modInterface.memoryInterface.nameToAddress("FirstEntity");
+            IntPtr lastEntityPtr = modInterface.memoryInterface.nameToAddress("FinalEntityPtr");
+            IntPtr lastEntity = (IntPtr)modInterface.memoryInterface.readLong(lastEntityPtr);
+            EntityTable et = new EntityTable(modInterface.dataInterface, firstEntity, lastEntity);
+            Entity[] entities = et.Entities;
+
+            foreach(Entity e in entities)
+            {
+                hpCache[e.Actor.Name] = e.StatPage.CurrentHP;
+            }
         }
 
         internal void handleEvent(string eventName, byte[] data, bool shouldPause)
@@ -76,6 +93,17 @@ namespace KHMI
                             {
                                 onEntityDeath(target);
                             }
+                            if(hpCache.ContainsKey(target.Actor.Name))
+                            {
+                                if(target.StatPage.CurrentHP > hpCache[target.Actor.Name])
+                                {
+                                    onHeal(target);
+                                }
+                                else
+                                {
+                                    onDamage(target);
+                                }
+                            }
                             onHPChange(target);
                         }
                     }
@@ -101,5 +129,7 @@ namespace KHMI
         public virtual void warpTableUpdate(WarpTable wt) { }
         public virtual void onHPChange(Entity target) { }
         public virtual void onEntityDeath(Entity deceased) { }
+        public virtual void onDamage(Entity target) { }
+        public virtual void onHeal(Entity target) { }
     }
 }
