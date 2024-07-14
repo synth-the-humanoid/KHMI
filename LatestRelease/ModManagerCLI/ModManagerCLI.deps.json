@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "ModManagerCLI/1.0.0": {
+        "dependencies": {
+          "KHMI": "1.0.0"
+        },
+        "runtime": {
+          "ModManagerCLI.dll": {}
+        }
+      },
+      "KHMI/1.0.0": {
+        "runtime": {
+          "KHMI.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ModManagerCLI/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "KHMI/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
