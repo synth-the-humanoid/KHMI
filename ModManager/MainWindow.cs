@@ -35,7 +35,7 @@ namespace ModManager
                 }
                 else
                 {
-                    statuslbl.Text = "Process not found. Try again";
+                    statuslbl.Text = "Process not found. Retry";
                     statuslbl.ForeColor = Color.Red;
                     running = !running;
                 }

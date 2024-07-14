@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             title = new Label();
             statuslbl = new Label();
             togglebtn = new Button();
@@ -71,8 +72,9 @@
             Controls.Add(togglebtn);
             Controls.Add(statuslbl);
             Controls.Add(title);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainWindow";
-            Text = "Kingdom Hearts Mod Interface";
+            Text = "KHMI";
             ResumeLayout(false);
             PerformLayout();
         }

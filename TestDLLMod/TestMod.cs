@@ -4,9 +4,9 @@ using System.Numerics;
 
 namespace TestDLLMod
 {
-    public class Class1 : KHMod
+    public class TestMod : KHMod
     {
-        public Class1(ModInterface mi) : base(mi) { }
+        public TestMod(ModInterface mi) : base(mi) { }
 
 
         public override void playerLoaded(Entity newPlayer)
