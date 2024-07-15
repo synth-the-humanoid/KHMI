@@ -32,6 +32,10 @@
             title = new Label();
             statuslbl = new Label();
             togglebtn = new Button();
+            provcombobox = new ComboBox();
+            provlbl = new Label();
+            versioncombobox = new ComboBox();
+            versionlbl = new Label();
             SuspendLayout();
             // 
             // title
@@ -56,6 +60,7 @@
             // 
             // togglebtn
             // 
+            togglebtn.Enabled = false;
             togglebtn.Location = new Point(50, 100);
             togglebtn.Name = "togglebtn";
             togglebtn.Size = new Size(148, 45);
@@ -64,11 +69,54 @@
             togglebtn.UseVisualStyleBackColor = true;
             togglebtn.Click += togglebtn_Click;
             // 
+            // provcombobox
+            // 
+            provcombobox.FormattingEnabled = true;
+            provcombobox.Location = new Point(412, 22);
+            provcombobox.Name = "provcombobox";
+            provcombobox.Size = new Size(103, 33);
+            provcombobox.TabIndex = 3;
+            provcombobox.SelectedIndexChanged += provcombobox_SelectedIndexChanged;
+            // 
+            // provlbl
+            // 
+            provlbl.AutoSize = true;
+            provlbl.Location = new Point(328, 25);
+            provlbl.Name = "provlbl";
+            provlbl.Size = new Size(78, 25);
+            provlbl.TabIndex = 4;
+            provlbl.Text = "Provider";
+            // 
+            // versioncombobox
+            // 
+            versioncombobox.Enabled = false;
+            versioncombobox.FormattingEnabled = true;
+            versioncombobox.Location = new Point(412, 61);
+            versioncombobox.Name = "versioncombobox";
+            versioncombobox.Size = new Size(103, 33);
+            versioncombobox.TabIndex = 5;
+            versioncombobox.Visible = false;
+            versioncombobox.SelectedIndexChanged += versioncombobox_SelectedIndexChanged;
+            // 
+            // versionlbl
+            // 
+            versionlbl.AutoSize = true;
+            versionlbl.Location = new Point(336, 61);
+            versionlbl.Name = "versionlbl";
+            versionlbl.Size = new Size(70, 25);
+            versionlbl.TabIndex = 6;
+            versionlbl.Text = "Version";
+            versionlbl.Visible = false;
+            // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(266, 161);
+            ClientSize = new Size(527, 161);
+            Controls.Add(versionlbl);
+            Controls.Add(versioncombobox);
+            Controls.Add(provlbl);
+            Controls.Add(provcombobox);
             Controls.Add(togglebtn);
             Controls.Add(statuslbl);
             Controls.Add(title);
@@ -84,5 +132,9 @@
         private Label title;
         private Label statuslbl;
         private Button togglebtn;
+        private ComboBox provcombobox;
+        private Label provlbl;
+        private ComboBox versioncombobox;
+        private Label versionlbl;
     }
 }

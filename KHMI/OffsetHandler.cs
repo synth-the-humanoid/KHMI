@@ -1,6 +1,6 @@
 ﻿namespace KHMI
 {
-    public enum Provider { EPIC, STEAM };
+    public enum Provider { EPIC, STEAM, JACKSPARROW };
 
     internal class OffsetHandler
     {

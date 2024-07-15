@@ -2,6 +2,42 @@
 
 namespace KHMI
 {
+    public static class VersionInfo
+    {
+        public static string[] GetSupportedVersions(Provider provider)
+        {
+            switch(provider)
+            {
+                case Provider.EPIC:
+                    return ["1.0.0.9"];
+                case Provider.STEAM:
+                    return ["none"];
+                default:
+                    return ["none"];
+            }
+        }
+
+        public static string[] SupportedProviders
+        {
+            get
+            {
+                return ["epic"];
+            }
+        }
+
+        public static Provider StringToProvider(string s)
+        {
+            switch(s)
+            {
+                case "epic":
+                    return Provider.EPIC;
+                case "steam":
+                    return Provider.STEAM;
+                default:
+                    return Provider.JACKSPARROW;
+            }
+        }
+    }
     public class ModLoader
     {
         private string offsets;
@@ -31,6 +67,12 @@ namespace KHMI
             return false;
         }
 
+        private bool hasExtension(string baseString, string extension)
+        {
+            string[] splits = baseString.Split(".");
+            return splits[splits.Length-1] == extension;
+        }
+
         private void loadMods()
         {
             if(!Directory.Exists(mods))
@@ -40,13 +82,16 @@ namespace KHMI
             string[] files = Directory.GetFiles(mods);
             foreach(string file in files)
             {
-                Assembly DLL = Assembly.LoadFile(Path.GetFullPath(file));
-                Type[] exportedTypes = DLL.GetExportedTypes();
-                foreach(Type type in exportedTypes)
+                if (hasExtension(file, ".dll"))
                 {
-                    if(type.IsSubclassOf(typeof(KHMod)))
+                    Assembly DLL = Assembly.LoadFile(Path.GetFullPath(file));
+                    Type[] exportedTypes = DLL.GetExportedTypes();
+                    foreach (Type type in exportedTypes)
                     {
-                        Activator.CreateInstance(type, args:[modInterface]);
+                        if (type.IsSubclassOf(typeof(KHMod)))
+                        {
+                            Activator.CreateInstance(type, args: [modInterface]);
+                        }
                     }
                 }
             }
