@@ -67,11 +67,6 @@ namespace KHMI
             return false;
         }
 
-        private bool hasExtension(string baseString, string extension)
-        {
-            string[] splits = baseString.Split(".");
-            return splits[splits.Length-1] == extension;
-        }
 
         private void loadMods()
         {
@@ -79,19 +74,16 @@ namespace KHMI
             {
                 Directory.CreateDirectory(mods);
             }
-            string[] files = Directory.GetFiles(mods);
+            string[] files = Directory.GetFiles(mods, "*.dll");
             foreach(string file in files)
             {
-                if (hasExtension(file, ".dll"))
+                Assembly DLL = Assembly.LoadFile(Path.GetFullPath(file));
+                Type[] exportedTypes = DLL.GetExportedTypes();
+                foreach (Type type in exportedTypes)
                 {
-                    Assembly DLL = Assembly.LoadFile(Path.GetFullPath(file));
-                    Type[] exportedTypes = DLL.GetExportedTypes();
-                    foreach (Type type in exportedTypes)
+                    if (type.IsSubclassOf(typeof(KHMod)))
                     {
-                        if (type.IsSubclassOf(typeof(KHMod)))
-                        {
-                            Activator.CreateInstance(type, args: [modInterface]);
-                        }
+                        Activator.CreateInstance(type, args: [modInterface]);
                     }
                 }
             }
@@ -99,7 +91,7 @@ namespace KHMI
 
         public void runEvents(int waitTime=50)
         {
-            if (!isClosed)
+            if (Runnable)
             {
                 modInterface.runEvents(waitTime);
             }

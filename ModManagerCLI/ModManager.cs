@@ -19,6 +19,16 @@ while (!modLoader.attach())
 if (modLoader != null)
 {
     Console.WriteLine("Process linked successfully. Running. Press enter to quit.");
+
+    Task t = Task.Run(() =>
+    {
+        while(modLoader.Runnable)
+        {
+            modLoader.runEvents();
+            Thread.Sleep(1);
+        }
+    });
+
     while(modLoader.Runnable)
     {
         if (Console.KeyAvailable)
@@ -29,8 +39,6 @@ if (modLoader != null)
                 modLoader.close();
             }
         }
-        modLoader.runEvents();
-        Thread.Sleep(1);
     }
 }
 

@@ -65,7 +65,7 @@
             get
             {
                 byte spentAP = 0;
-                foreach(Ability a in Abilities)
+                foreach(Ability a in EquippedAbilities)
                 {
                     spentAP += a.APCost;
                 }
@@ -142,7 +142,7 @@
             }
         }
 
-        public byte[] Items
+        public byte[] ItemBytes
         {
             get
             {
@@ -151,6 +151,20 @@
             set
             {
                 memoryInterface.writeBytes(address + 0x22, value);
+            }
+        }
+
+        public Item[] Items
+        {
+            get
+            {
+                byte[] itemBytes = ItemBytes;
+                Item[] items = new Item[itemBytes.Length];
+                for(int i = 0; i < items.Length; i++)
+                {
+                    items[i] = Item.FromID(dataInterface, itemBytes[i]);
+                }
+                return items;
             }
         }
 
@@ -207,6 +221,26 @@
             }
         }
 
+        public int EquippedAbilityCount
+        {
+            get
+            {
+                int i = 0;
+                foreach(byte b in AbilityBytes)
+                {
+                    if (b == 0)
+                    {
+                        break;
+                    }
+                    if(b < 0x80)
+                    {
+                        i++;
+                    }
+                }
+                return i;
+            }
+        }
+
         public Ability[] Abilities
         {
             get
@@ -221,6 +255,25 @@
                 return abilities;
             }
         }
+
+        public Ability[] EquippedAbilities
+        {
+            get
+            {
+                byte[] abilityBytes = AbilityBytes;
+                Ability[] equippedAbilities = new Ability[EquippedAbilityCount];
+                int i = 0;
+                foreach(byte b in abilityBytes)
+                {
+                    if(b < 0x80)
+                    {
+                        equippedAbilities[i++] = Ability.FromID(dataInterface, b);
+                    }
+                }
+                return equippedAbilities;
+            }
+        }
+
 
         public byte MagicFlag
         {
@@ -243,14 +296,14 @@
             {
                 eqStr = string.Format("{0} {1:X}", eqStr, b);
             }
-            eqStr = string.Format("Equipment: {0}\n", eqStr);
-            byte[] items = Items;
+            eqStr = string.Format("Equipment:\n{0}\n", eqStr);
+            Item[] items = Items;
             string itemStr = "";
-            foreach(byte b in items)
+            foreach(Item item in items)
             {
-                itemStr = string.Format("{0} {1:X}", itemStr, b);
+                itemStr = string.Format("{0}{1}", itemStr, item.ToString());
             }
-            itemStr = string.Format("Items: {0}\n", itemStr);
+            itemStr = string.Format("Items:\n{0}\n", itemStr);
             string abStr = "";
             Ability[] abilities = Abilities;
             foreach(Ability a in abilities)
