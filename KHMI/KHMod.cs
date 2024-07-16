@@ -61,6 +61,28 @@ namespace KHMI
                         playerUnloaded();
                     }
                     break;
+                case "party1LoadedEvent":
+                    IntPtr party1Address = (IntPtr)BitConverter.ToInt64(data);
+                    if(party1Address != IntPtr.Zero)
+                    {
+                        partyLoaded(new Entity(modInterface.dataInterface, party1Address), 1);
+                    }
+                    else
+                    {
+                        partyUnloaded(1);
+                    }
+                    break;
+                case "party2LoadedEvent":
+                    IntPtr party2Address = (IntPtr)BitConverter.ToInt64(data);
+                    if (party2Address != IntPtr.Zero)
+                    {
+                        partyLoaded(new Entity(modInterface.dataInterface, party2Address), 2);
+                    }
+                    else
+                    {
+                        partyUnloaded(2);
+                    }
+                    break;
                 case "lockOnEvent":
                     IntPtr entityAddress = (IntPtr)BitConverter.ToInt64(data);
                     if (entityAddress == IntPtr.Zero)
@@ -124,6 +146,8 @@ namespace KHMI
         public virtual void warpUpdate(int newWarpID) { }
         public virtual void playerLoaded(Entity newPlayer) { }
         public virtual void playerUnloaded() { }
+        public virtual void partyLoaded(Entity newParty, int partySlot) { }
+        public virtual void partyUnloaded(int partySlot) { }
         public virtual void playerLockOff() { }
         public virtual void playerLockOn(Entity target) { }
         public virtual void warpTableUpdate(WarpTable wt) { }

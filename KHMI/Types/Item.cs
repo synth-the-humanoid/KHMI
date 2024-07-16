@@ -16,7 +16,7 @@
         {
             get
             {
-                int stringOffset = memoryInterface.readInt(address) * 4;
+                int stringOffset = memoryInterface.readShort(address) * 4;
                 IntPtr itemNameBase = memoryInterface.nameToAddress("ItemNameBase");
                 IntPtr stringAddress = dataInterface.convert4to8(memoryInterface.readInt(itemNameBase + stringOffset));
                 return new KHString(dataInterface, stringAddress);

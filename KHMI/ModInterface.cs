@@ -38,6 +38,8 @@
             createDefaultHooks();
             evHandler.registerDataEvent("warpEvent", memInterface.nameToAddress("WarpID"), 4);
             evHandler.registerDataEvent("playerLoadedEvent", memInterface.nameToAddress("PlayerEntityPtr"), 8);
+            evHandler.registerDataEvent("party1LoadedEvent", memInterface.nameToAddress("Party1EntityPtr"), 8);
+            evHandler.registerDataEvent("party2LoadedEvent", memInterface.nameToAddress("Party2EntityPtr"), 8);
             evHandler.registerDataEvent("lockOnEvent", memInterface.nameToAddress("LockOnEntityPtr"), 8);
             evHandler.registerDataEvent("warpTableEvent", memInterface.nameToAddress("WarpTableStartPtr"), 8);
         }
@@ -66,7 +68,7 @@
 
 
 
-        public void runEvents(int waitTime=50)
+        public void runEvents(int waitTime=5)
         {
             Dictionary<string, KHMIEvent> runnableEvents = evHandler.checkUpdate(waitTime);
             foreach (string eventName in runnableEvents.Keys)
@@ -74,7 +76,10 @@
                 bool shouldPause = runnableEvents[eventName].callbackShouldPause;
                 foreach (KHMod eachMod in modList)
                 {
-                    eachMod.handleEvent(eventName, runnableEvents[eventName].value, shouldPause);
+                    Task t = Task.Run(() =>
+                    {
+                        eachMod.handleEvent(eventName, runnableEvents[eventName].value, shouldPause);
+                    });
                 }
             }
         }

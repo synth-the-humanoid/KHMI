@@ -17,6 +17,7 @@ namespace KHMI.Types
             return null;
         }
 
+
         public Vector3 Position
         {
             get

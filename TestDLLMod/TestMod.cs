@@ -10,11 +10,11 @@ namespace TestDLLMod
 
         public override void playerLoaded(Entity newPlayer)
         {
-
             StatPage sp = newPlayer.StatPage;
             PartyStatPage psp = sp.PartyStatPage;
-            newPlayer.Position = new Vector3(0, 0, 0);
-            Console.WriteLine(psp);
+            Item weapon = psp.Weapon;
+            weapon.Name.ASCII = "bonkstick";
+            weapon.Description.ASCII = "the true bonk blade";
         }
     }
 }

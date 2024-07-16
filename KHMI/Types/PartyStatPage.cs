@@ -118,7 +118,7 @@
             }
         }
 
-        public byte[] Equipment
+        public byte[] EquipmentBytes
         {
             get
             {
@@ -127,6 +127,35 @@
             set
             {
                 memoryInterface.writeBytes(address + 0x19, value);
+            }
+        }
+
+        public int EquippedEquipment
+        {
+            get
+            {
+                int i = 0;
+                foreach(byte b in EquipmentBytes)
+                {
+                    if(b != 0)
+                    {
+                        i++;
+                    }
+                }
+                return i;
+            }
+        }
+
+        public Item[] Equipment
+        {
+            get
+            {
+                Item[] equipment = new Item[EquippedEquipment];
+                for(byte i = 0; i < equipment.Length; i++)
+                {
+                    equipment[i] = Item.FromID(dataInterface, i);
+                }
+                return equipment;
             }
         }
 
@@ -168,7 +197,7 @@
             }
         }
 
-        public byte Weapon
+        public byte WeaponByte
         {
             get
             {
@@ -177,6 +206,14 @@
             set
             {
                 memoryInterface.writeByte(address + 0x32, value);
+            }
+        }
+
+        public Item Weapon
+        {
+            get
+            {
+                return Item.FromID(dataInterface, WeaponByte);
             }
         }
 
@@ -290,11 +327,11 @@
         public override string ToString()
         {
             string baseString = string.Format("PartyStatPage:\nHP: {0:D}/{1:D}\nMP: {2:D}/{3:D}\nMax AP: {4:D}\nStrength: {5:D}\nDefense: {6:D}\n", CurrentHP, MaxHP, CurrentMP, MaxMP, MaxAP, Strength, Defense);
-            byte[] equips = Equipment;
+            Item[] equips = Equipment;
             string eqStr = "";
-            foreach(byte b in equips)
+            foreach(Item i in equips)
             {
-                eqStr = string.Format("{0} {1:X}", eqStr, b);
+                eqStr = string.Format("{0}\n{1:X}\n", eqStr, i);
             }
             eqStr = string.Format("Equipment:\n{0}\n", eqStr);
             Item[] items = Items;
@@ -310,9 +347,9 @@
             {
                 abStr = string.Format("{0}{1}", abStr, a.ToString());
             }
-            abStr = string.Format("Abilities: {0}\n", abStr);
+            abStr = string.Format("Abilities:\n{0}\n", abStr);
 
-            return string.Format("{0}{1}{2}Weapon: {3:X}\nEXP: {4:D}\n{5}Magic Flag: {6:X}\n", baseString, eqStr, itemStr, Weapon, EXP, abStr, MagicFlag);
+            return string.Format("{0}{1}{2}Weapon: {3}\nEXP: {4:D}\n{5}Magic Flag: {6:X}\n", baseString, eqStr, itemStr, Weapon, EXP, abStr, MagicFlag);
         }
     }
 }

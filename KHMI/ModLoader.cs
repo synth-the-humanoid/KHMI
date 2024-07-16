@@ -89,7 +89,7 @@ namespace KHMI
             }
         }
 
-        public void runEvents(int waitTime=50)
+        public void runEvents(int waitTime=5)
         {
             if (Runnable)
             {

@@ -94,6 +94,11 @@ namespace KHMI
             return data;
         }
 
+        public short readShort(IntPtr address)
+        {
+            return BitConverter.ToInt16(readBytes(address, 2));
+        }
+
         public int readInt(IntPtr address)
         {
             byte[] data = readBytes(address, INT_SIZE);
@@ -127,6 +132,11 @@ namespace KHMI
         {
             int bytesWritten = 0;
             return WriteProcessMemory((int)procHandle, (long)address, data, data.Length, ref bytesWritten);
+        }
+
+        public bool writeShort(IntPtr address, short data)
+        {
+            return writeBytes(address, BitConverter.GetBytes(data));
         }
 
         public bool writeInt(IntPtr address, int value)
