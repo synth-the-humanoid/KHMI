@@ -8,13 +8,11 @@ namespace TestDLLMod
     {
         public TestMod(ModInterface mi) : base(mi) { }
 
-        public override void playerLoaded(Entity newPlayer)
+
+        public override void partyLoaded(Entity newParty, int partySlot)
         {
-            StatPage sp = newPlayer.StatPage;
-            PartyStatPage psp = sp.PartyStatPage;
-            Item weapon = psp.Weapon;
-            weapon.Name.ASCII = "bonkstick";
-            weapon.Description.ASCII = "the true bonk blade";
+
+            Console.WriteLine("{0}: {1:D}", newParty.Actor.Name, newParty.StatPage.PartyStatPage.Weapon.ToString());
         }
     }
 }

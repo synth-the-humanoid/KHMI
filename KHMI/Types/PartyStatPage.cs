@@ -209,11 +209,11 @@
             }
         }
 
-        public Item Weapon
+        public Weapon Weapon
         {
             get
             {
-                return Item.FromID(dataInterface, WeaponByte);
+                return Weapon.FromID(dataInterface, WeaponByte);
             }
         }
 

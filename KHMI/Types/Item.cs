@@ -23,6 +23,18 @@
             }
         }
 
+        public byte IconID
+        {
+            get
+            {
+                return memoryInterface.readByte(address + 0x2);
+            }
+            set
+            {
+                memoryInterface.writeByte(address + 0x2, value);
+            }
+        }
+
         public KHString Description
         {
             get
@@ -35,7 +47,7 @@
 
         public override string ToString()
         {
-            return string.Format("Item:\nName: {0}\nDescription: {1}\n", Name.ToString(), Description.ToString());
+            return string.Format("Item:\nName: {0}\nIcon ID: {1:D}\nDescription: {2}\n", Name.ToString(), IconID, Description.ToString());
         }
     }
 }
