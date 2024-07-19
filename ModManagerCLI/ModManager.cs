@@ -1,9 +1,59 @@
 ﻿using KHMI;
 
-Console.WriteLine("KHMI\nPress enter to attempt to link to game.");
-Console.ReadLine();
+Console.WriteLine("KHMI\n");
+string[] providers = VersionInfo.SupportedProviders;
+string selection = "";
+string prompt = "Type the desired Provider selection and press enter to begin.";
+for (int i = 0; i < providers.Length; i++)
+{
+    prompt = string.Format("{0}\n{1:D}: {2}", prompt, i + 1, providers[i]);
+}
 
-ModLoader modLoader = new ModLoader(Provider.EPIC, "1.0.0.9");
+do
+{
+    Console.WriteLine(prompt);
+    string response = Console.ReadLine();
+    int choice = 0;
+    int.TryParse(response, out choice);
+    if (choice > 0 && choice <= providers.Length)
+    {
+        selection = providers[choice-1];
+    }
+    else
+    {
+        Console.WriteLine("Invalid choice. Try again.");
+    }
+}
+while (selection == "");
+
+Provider provider = VersionInfo.StringToProvider(selection);
+string[] versions = VersionInfo.GetSupportedVersions(provider);
+prompt = "Type the desired Version selection and press enter to begin.";
+for (int i = 0; i < versions.Length; i++)
+{
+    prompt = string.Format("{0}\n{1:D}: {2}", prompt, i + 1, versions[i]);
+}
+
+selection = "";
+do
+{
+    Console.WriteLine(prompt);
+    string response = Console.ReadLine();
+    int choice = 0;
+    int.TryParse(response, out choice);
+    if(choice > 0 && choice <= versions.Length)
+    {
+        selection = versions[choice-1];
+    }
+    else
+    {
+        Console.WriteLine("Invalid choice. Try again.");
+    }
+}
+while (selection == "");
+
+
+ModLoader modLoader = new ModLoader(provider, selection);
 
 while (!modLoader.attach())
 {
@@ -15,6 +65,8 @@ while (!modLoader.attach())
         break;
     }
 }
+
+
 
 if (modLoader != null)
 {
