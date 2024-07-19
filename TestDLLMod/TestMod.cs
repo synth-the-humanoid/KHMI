@@ -9,10 +9,10 @@ namespace TestDLLMod
         public TestMod(ModInterface mi) : base(mi) { }
 
 
-        public override void partyLoaded(Entity newParty, int partySlot)
+        public override void playerLoaded(Entity newPlayer)
         {
-
-            Console.WriteLine("{0}: {1:D}", newParty.Actor.Name, newParty.StatPage.PartyStatPage.Weapon.ToString());
+            Room r = Room.Current(modInterface.dataInterface);
+            Console.WriteLine("New room: {0}", r.Name);
         }
     }
 }

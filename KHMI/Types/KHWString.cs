@@ -14,21 +14,24 @@
         {
             char[] chars = s.ToCharArray();
             short i = start;
-            short prefixShifted = (short)((int)prefix << 8);
             foreach(char c in chars)
             {
-                short currentIndex = (short)(prefixShifted & i++);
+                short currentIndex = (short)(((short)i << 8) | (short)prefix);
+                i++;
                 asciiChars[currentIndex] = c;
             }
         }
 
         private void loadDictionary()
         {
-            string asciiCharsFirst = "012345679ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            string asciiCharsSecond = "abcdefghijklmnopqrstuvwxyz";
+            string asciiCharsFirst = "0123456789"; 
+            string asciiCharsSecond = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string asciiCharsThird = "abcdefghijklmnopqrstuvwxyz";
 
-            loadStringToDict(Charset.ASCII, 0x60, asciiCharsFirst);
-            loadStringToDict(Charset.ASCII, 0x81, asciiCharsSecond);
+            loadStringToDict(Charset.ASCII, 0x4F, asciiCharsFirst);
+            loadStringToDict(Charset.ASCII, 0x60, asciiCharsSecond);
+            loadStringToDict(Charset.ASCII, 0x81, asciiCharsThird);
+            asciiChars[0x4081] = ' ';
 
         }
 
@@ -86,7 +89,7 @@
                 short[] shorts = Data;
                 foreach(short s in shorts)
                 {
-                    if(s == 0)
+                    if (s == 0)
                     {
                         break;
                     }
