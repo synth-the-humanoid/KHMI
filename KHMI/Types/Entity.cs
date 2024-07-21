@@ -29,10 +29,15 @@ namespace KHMI.Types
                     entityAddressPtr = di.modInterface.memoryInterface.nameToAddress("Party2EntityPtr");
                     break;
                 default:
-                    return null;
+                    entityAddressPtr = IntPtr.Zero;
+                    break;
             }
-            IntPtr entityAddress = (IntPtr)di.modInterface.memoryInterface.readLong(entityAddressPtr);
-            return new Entity(di, entityAddress);
+            if (entityAddressPtr != IntPtr.Zero)
+            {
+                IntPtr entityAddress = (IntPtr)di.modInterface.memoryInterface.readLong(entityAddressPtr);
+                return new Entity(di, entityAddress);
+            }
+            return null;
         }
 
         public IntPtr EntityPtr
