@@ -32,7 +32,6 @@
             loadStringToDict(Charset.ASCII, 0x60, asciiCharsSecond);
             loadStringToDict(Charset.ASCII, 0x81, asciiCharsThird);
             asciiChars[0x4081] = ' ';
-
         }
 
         public int Length

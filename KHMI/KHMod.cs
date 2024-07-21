@@ -26,10 +26,7 @@ namespace KHMI
         private void loadHPCache()
         {
             hpCache = new Dictionary<string, int>();
-            IntPtr firstEntity = modInterface.memoryInterface.nameToAddress("FirstEntity");
-            IntPtr lastEntityPtr = modInterface.memoryInterface.nameToAddress("FinalEntityPtr");
-            IntPtr lastEntity = (IntPtr)modInterface.memoryInterface.readLong(lastEntityPtr);
-            EntityTable et = new EntityTable(modInterface.dataInterface, firstEntity, lastEntity);
+            EntityTable et = EntityTable.Current(modInterface.dataInterface);
             Entity[] entities = et.Entities;
 
             foreach(Entity e in entities)
@@ -49,6 +46,17 @@ namespace KHMI
             {
                 case "warpEvent":
                     warpUpdate(BitConverter.ToInt32(data));
+                    break;
+                case "roomEvent":
+                    Room newRoom = new Room(modInterface.dataInterface, World.Current(modInterface.dataInterface), BitConverter.ToInt32(data));
+                    roomUpdate(newRoom);
+                    break;
+                case "worldEvent":
+                    World newWorld = new World(modInterface.dataInterface, BitConverter.ToInt32(data));
+                    worldUpdate(newWorld);
+                    IntPtr roomIDAddress = modInterface.memoryInterface.nameToAddress("RoomID");
+                    Room newWRoom = new Room(modInterface.dataInterface, newWorld, modInterface.memoryInterface.readInt(roomIDAddress));
+                    roomUpdate(newWRoom);
                     break;
                 case "playerLoadedEvent":
                     IntPtr playerAddress = (IntPtr)BitConverter.ToInt64(data);
@@ -130,6 +138,9 @@ namespace KHMI
                         }
                     }
                     break;
+                case "cameraStyleEvent":
+                    cameraStyleChange(BitConverter.ToInt32(data));
+                    break;
                 default:
                     break;
             }
@@ -144,6 +155,8 @@ namespace KHMI
         }
 
         public virtual void warpUpdate(int newWarpID) { }
+        public virtual void roomUpdate(Room newRoom) { }
+        public virtual void worldUpdate(World newWorld) { }
         public virtual void playerLoaded(Entity newPlayer) { }
         public virtual void playerUnloaded() { }
         public virtual void partyLoaded(Entity newParty, int partySlot) { }
@@ -155,5 +168,6 @@ namespace KHMI
         public virtual void onEntityDeath(Entity deceased) { }
         public virtual void onDamage(Entity target) { }
         public virtual void onHeal(Entity target) { }
+        public virtual void cameraStyleChange(int newStyle) { }
     }
 }

@@ -1,18 +1,25 @@
 ﻿using KHMI;
 using KHMI.Types;
-using System.Numerics;
 
 namespace TestDLLMod
 {
     public class TestMod : KHMod
     {
-        public TestMod(ModInterface mi) : base(mi) { }
-
+        private IntPtr camTargetPtr;
+        public TestMod(ModInterface mi) : base(mi)
+        {
+            camTargetPtr = modInterface.memoryInterface.nameToAddress("CameraTargetPtr");
+        }
 
         public override void playerLoaded(Entity newPlayer)
         {
-            Room r = Room.Current(modInterface.dataInterface);
-            Console.WriteLine("New room: {0}", r.Name);
+            Random r = new Random();
+            Entity camTargetEnt = Entity.getParty(modInterface.dataInterface, (r.Next(2) + 1));
+            if(camTargetEnt != null)
+            {
+                modInterface.memoryInterface.writeLong(camTargetPtr, camTargetEnt.EntityPtr);
+            }
         }
+
     }
 }

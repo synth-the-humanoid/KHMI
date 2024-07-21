@@ -17,6 +17,32 @@ namespace KHMI.Types
             return null;
         }
 
+        public static Entity getParty(DataInterface di, int partyID)
+        {
+            IntPtr entityAddressPtr = IntPtr.Zero;
+            switch(partyID)
+            {
+                case 1:
+                    entityAddressPtr = di.modInterface.memoryInterface.nameToAddress("Party1EntityPtr");
+                    break;
+                case 2:
+                    entityAddressPtr = di.modInterface.memoryInterface.nameToAddress("Party2EntityPtr");
+                    break;
+                default:
+                    return null;
+            }
+            IntPtr entityAddress = (IntPtr)di.modInterface.memoryInterface.readLong(entityAddressPtr);
+            return new Entity(di, entityAddress);
+        }
+
+        public IntPtr EntityPtr
+        {
+            get
+            {
+                return address;
+            }
+        }
+
 
         public Vector3 Position
         {

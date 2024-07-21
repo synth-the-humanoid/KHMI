@@ -18,6 +18,13 @@
             }
         }
 
+        public static WarpTable Current(DataInterface di)
+        {
+            IntPtr wtStart = di.modInterface.memoryInterface.nameToAddress("WarpTableStartPtr");
+            IntPtr wtEnd = di.modInterface.memoryInterface.nameToAddress("WarpTableEndPtr");
+            return new WarpTable(di, wtStart, wtEnd);
+        }
+
         public override string ToString()
         {
             string info = string.Format("Warp Count: {0:D}\n", Size);

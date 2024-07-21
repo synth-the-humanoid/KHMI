@@ -37,11 +37,14 @@
         {
             createDefaultHooks();
             evHandler.registerDataEvent("warpEvent", memInterface.nameToAddress("WarpID"), 4);
+            evHandler.registerDataEvent("roomEvent", memInterface.nameToAddress("RoomID"), 4);
+            evHandler.registerDataEvent("worldEvent", memInterface.nameToAddress("WorldID"), 4);
             evHandler.registerDataEvent("playerLoadedEvent", memInterface.nameToAddress("PlayerEntityPtr"), 8);
             evHandler.registerDataEvent("party1LoadedEvent", memInterface.nameToAddress("Party1EntityPtr"), 8);
             evHandler.registerDataEvent("party2LoadedEvent", memInterface.nameToAddress("Party2EntityPtr"), 8);
             evHandler.registerDataEvent("lockOnEvent", memInterface.nameToAddress("LockOnEntityPtr"), 8);
             evHandler.registerDataEvent("warpTableEvent", memInterface.nameToAddress("WarpTableStartPtr"), 8);
+            evHandler.registerDataEvent("cameraStyleEvent", memInterface.nameToAddress("CameraStyle"), 4);
         }
 
         private void createDefaultHooks()

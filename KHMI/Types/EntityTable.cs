@@ -19,6 +19,14 @@
             }
         }
 
+        public static EntityTable Current(DataInterface di)
+        {
+            IntPtr firstEnt = di.modInterface.memoryInterface.nameToAddress("FirstEntity");
+            IntPtr lastEntPtr = di.modInterface.memoryInterface.nameToAddress("FinalEntityPtr");
+            IntPtr lastEnt = (IntPtr)di.modInterface.memoryInterface.readLong(lastEntPtr);
+            return new EntityTable(di, firstEnt, lastEnt);
+        }
+
         public override string ToString()
         {
             string data = string.Format("Entity Count: {0:D}\n", Size);
