@@ -21,6 +21,7 @@ Party2EntityPtr,epic1.0.0.9,0x2D37C10
 FirstEntity,epic1.0.0.9,0x2D37C20
 FinalEntityPtr,epic1.0.0.9,0x2D37C18
 LockOnEntityPtr,epic1.0.0.9,0x25387F0
+CameraTargetPtr,epic1.0.0.9,0x2538990
 
 --Etc
 4to8Base,epic1.0.0.9,0x2EE46B0
