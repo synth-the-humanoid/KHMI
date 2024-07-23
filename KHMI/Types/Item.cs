@@ -12,6 +12,19 @@
             return new Item(di, baseAddress + offset);
         }
 
+        public static Item FromRewardID(DataInterface di, int rewardID)
+        {
+            if(rewardID != 0)
+            {
+                IntPtr rewardBase = di.modInterface.memoryInterface.nameToAddress("RewardTableBase");
+                IntPtr rewardAddress = rewardBase + (rewardID * 2);
+                short rewardData = di.modInterface.memoryInterface.readShort(rewardAddress);
+                byte itemID = (byte)(rewardData >> 4);
+                return Item.FromID(di, itemID);
+            }
+            return null;
+        }
+
         public KHString Name
         {
             get
@@ -20,6 +33,17 @@
                 IntPtr itemNameBase = memoryInterface.nameToAddress("ItemNameBase");
                 IntPtr stringAddress = dataInterface.convert4to8(memoryInterface.readInt(itemNameBase + stringOffset));
                 return new KHString(dataInterface, stringAddress);
+            }
+        }
+
+        public byte ItemID
+        {
+            get
+            {
+                IntPtr baseAddressPtr = memoryInterface.nameToAddress("ItemInfoPtr");
+                IntPtr baseAddress = (IntPtr)memoryInterface.readLong(baseAddressPtr);
+                int offset = (int)(address - baseAddress);
+                return (byte) (((offset / 4) / 5) - 1); 
             }
         }
 

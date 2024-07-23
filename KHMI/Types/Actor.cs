@@ -28,6 +28,14 @@
             }
         }
 
+        public Item Reward
+        {
+            get
+            {
+                return Item.FromRewardID(dataInterface, RewardID);
+            }
+        }
+
         public string MDLS
         {
             get
