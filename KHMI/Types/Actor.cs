@@ -16,6 +16,18 @@
             }
         }
 
+        public int RewardID
+        {
+            get
+            {
+                return memoryInterface.readInt(address + 0x48);
+            }
+            set
+            {
+                memoryInterface.writeInt(address + 0x48, value);
+            }
+        }
+
         public string MDLS
         {
             get
