@@ -136,6 +136,14 @@ namespace KHMI.Types
             }
         }
 
+        public bool IsChest
+        {
+            get
+            {
+                return Actor.IsChest;
+            }
+        }
+
         public override string ToString()
         {
             string pos = string.Format("Position:\nX: {0:F2}\nY: {1:F2}\nZ: {2:F2}\n", Position.X, Position.Y, Position.Z);

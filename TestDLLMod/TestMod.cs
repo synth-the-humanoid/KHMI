@@ -5,16 +5,21 @@ namespace TestDLLMod
 {
     public class TestMod : KHMod
     {
-        public TestMod(ModInterface mi) : base(mi) { }
-
-        public override void playerLockOn(Entity target)
+        public TestMod(ModInterface mi) : base(mi)
         {
-            Actor actor = target.Actor;
-            Item reward = actor.Reward;
-            if (reward != null)
+            string data = "";
+            for(int i = 0; i <= 16; i++)
             {
-                Console.WriteLine("The reward inside of {0} is {1}.", actor.Name, reward.Name);
+                World current = new World(modInterface.dataInterface, i);
+                Room[] currentRooms = current.Rooms;
+                string currentData = string.Format("World: {0:D}", i);
+                foreach(Room r in currentRooms)
+                {
+                    currentData = string.Format("{0}\nRoom Name: {1}\nScene: {2:D}\n", currentData, r.Name, r.SceneID);
+                }
+                data += currentData;
             }
+            Console.WriteLine(data);
         }
     }
 }

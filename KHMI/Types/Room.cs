@@ -39,5 +39,27 @@
                 return roomID;
             }
         }
+
+        public World World
+        {
+            get
+            {
+                return world;
+            }
+        }
+
+        public byte SceneID
+        {
+            get
+            {
+                IntPtr sceneTable = world.SceneTable;
+                return memoryInterface.readByte(sceneTable + roomID);
+            }
+            set
+            {
+                IntPtr sceneTable = world.SceneTable;
+                memoryInterface.writeByte(sceneTable + roomID, value);
+            }
+        }
     }
 }

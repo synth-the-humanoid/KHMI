@@ -6,6 +6,22 @@ namespace KHMI.Types
     {
         public Warp(DataInterface di, IntPtr address) : base(di, address) { }
 
+        public static Warp FromID(DataInterface di, int id, WarpTable wt=null)
+        {
+            if(wt == null)
+            {
+                wt = WarpTable.Current(di);
+            }
+            return wt.Warps[id];
+        }
+
+        public static Warp Current(DataInterface di)
+        {
+            IntPtr warpIDAddress = di.modInterface.memoryInterface.nameToAddress("WarpID");
+            int warpID = di.modInterface.memoryInterface.readInt(warpIDAddress);
+            return Warp.FromID(di, warpID, WarpTable.Current(di));
+        }
+
         public int RoomID
         {
             get
@@ -15,6 +31,14 @@ namespace KHMI.Types
             set
             {
                 memoryInterface.writeInt(address, value);
+            }
+        }
+
+        public Room Room
+        {
+            get
+            {
+                return new Room(dataInterface, World.Current(dataInterface), RoomID);
             }
         }
 

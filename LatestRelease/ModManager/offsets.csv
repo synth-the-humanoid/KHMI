@@ -13,6 +13,8 @@ WarpID,epic1.0.0.9,0x232E888
 SceneID,epic1.0.0.9,0x2340E48
 ARD,epic1.0.0.9,0x232E840
 RoomNameStringTable,epic1.0.0.9,0x234CA70
+RoomOffsetTableBase,epic1.0.0.9,0x4DD8C0
+SceneTableBasePtr,epic1.0.0.9,0x232E730
 
 --Entity Offsets
 PlayerEntityPtr,epic1.0.0.9,0x2D37C00
@@ -29,3 +31,4 @@ AbilityInfoPtr,epic1.0.0.9,0x2D376C8
 CameraStyle,epic1.0.0.9,0x299C488
 ItemInfoPtr,epic1.0.0.9,0x2D236B8
 ItemNameBase,epic1.0.0.9,0x2D23918
+ChestRewardTableBase,epic1.0.0.9,0x529A60

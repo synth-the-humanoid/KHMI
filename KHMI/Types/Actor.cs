@@ -16,7 +16,7 @@
             }
         }
 
-        public int RewardID
+        public int ChestRewardID
         {
             get
             {
@@ -28,11 +28,26 @@
             }
         }
 
-        public Item Reward
+        public Item ChestReward
         {
             get
             {
-                return Item.FromRewardID(dataInterface, RewardID);
+                return Item.FromChestRewardID(dataInterface, ChestRewardID);
+            }
+            set
+            {
+                IntPtr rewardBase = memoryInterface.nameToAddress("ChestRewardTableBase");
+                IntPtr rewardAddress = rewardBase + (ChestRewardID * 2);
+                short rewardData = (short)(value.ItemID << 4);
+                memoryInterface.writeShort(rewardAddress, rewardData);
+            }
+        }
+
+        public bool IsChest
+        {
+            get
+            {
+                return ChestRewardID != 0;
             }
         }
 
