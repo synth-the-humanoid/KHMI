@@ -27,10 +27,10 @@
 
         public static Item FromName(DataInterface di, string name)
         {
-            byte i = 0;
-            while(i <= 255)
+            int i = 0;
+            while(i < 256)
             {
-                Item currentItem = Item.FromID(di, i++);
+                Item currentItem = Item.FromID(di, (byte)i++);
                 if (currentItem.Name.ASCII == name)
                 {
                     return currentItem;
@@ -39,14 +39,46 @@
             return null;
         }
 
+
+        public short ActionID
+        {
+            get
+            {
+                return memoryInterface.readShort(address);
+            }
+            set
+            {
+                memoryInterface.writeShort(address, value);
+            }
+        }
+
+        public KHAction Action
+        {
+            get
+            {
+                return KHAction.FromID(dataInterface, ActionID);
+            }
+        }
+
         public KHString Name
         {
             get
             {
-                int stringOffset = memoryInterface.readShort(address) * 4;
-                IntPtr itemNameBase = memoryInterface.nameToAddress("ItemNameBase");
-                IntPtr stringAddress = dataInterface.convert4to8(memoryInterface.readInt(itemNameBase + stringOffset));
-                return new KHString(dataInterface, stringAddress);
+                return Action.Name;
+            }
+        }
+
+        public byte InventoryAmount
+        {
+            get
+            {
+                IntPtr inventoryArray = memoryInterface.nameToAddress("InventoryArray");
+                return memoryInterface.readByte(inventoryArray + ItemID - 1);
+            }
+            set
+            {
+                IntPtr inventoryArray = memoryInterface.nameToAddress("InventoryArray");
+                memoryInterface.writeByte(inventoryArray + ItemID - 1, value);
             }
         }
 
@@ -83,9 +115,33 @@
             }
         }
 
+        public short BuyPrice
+        {
+            get
+            {
+                return memoryInterface.readShort(address + 0x8);
+            }
+            set
+            {
+                memoryInterface.writeShort(address + 0x8, value);
+            }
+        }
+
+        public short SellPrice
+        {
+            get
+            {
+                return memoryInterface.readShort(address + 0xA);
+            }
+            set
+            {
+                memoryInterface.writeShort(address + 0xA, value);
+            }
+        }
+
         public override string ToString()
         {
-            return string.Format("Item:\nName: {0}\nIcon ID: {1:D}\nDescription: {2}\n", Name.ToString(), IconID, Description.ToString());
+            return string.Format("Item:\nName: {0}\nIcon ID: {1:D}\nDescription: {2}\nBuy Price: {3:D}\nSell Price: {4:D}\n", Name.ToString(), IconID, Description.ToString(), BuyPrice, SellPrice);
         }
     }
 }
