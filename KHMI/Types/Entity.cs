@@ -73,11 +73,19 @@ namespace KHMI.Types
             }
         }
 
+        public int StatPageID
+        {
+            get
+            {
+                return memoryInterface.readInt(address + 0x6C);
+            }
+        }
+
         public StatPage StatPage
         {
             get
             {
-                int offset = memoryInterface.readInt(address + 0x6C);
+                int offset = StatPageID;
                 if (offset == 0)
                 {
                     return null;
