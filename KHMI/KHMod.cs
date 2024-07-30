@@ -125,13 +125,14 @@ namespace KHMI
                             }
                             if(hpCache.ContainsKey(target.Actor.Name))
                             {
+                                int difference = Math.Abs(target.StatPage.CurrentHP - hpCache[target.Actor.Name]);
                                 if(target.StatPage.CurrentHP > hpCache[target.Actor.Name])
                                 {
-                                    onHeal(target);
+                                    onHeal(target, difference);
                                 }
                                 else
                                 {
-                                    onDamage(target);
+                                    onDamage(target, difference);
                                 }
                             }
                             onHPChange(target);
@@ -140,6 +141,9 @@ namespace KHMI
                     break;
                 case "cameraStyleEvent":
                     cameraStyleChange(BitConverter.ToInt32(data));
+                    break;
+                case "actorLoadEvent":
+                    actorTableUpdate(ActorTable.Current(modInterface.dataInterface));
                     break;
                 default:
                     break;
@@ -166,8 +170,9 @@ namespace KHMI
         public virtual void warpTableUpdate(WarpTable wt) { }
         public virtual void onHPChange(Entity target) { }
         public virtual void onEntityDeath(Entity deceased) { }
-        public virtual void onDamage(Entity target) { }
-        public virtual void onHeal(Entity target) { }
+        public virtual void onDamage(Entity target, int damage) { }
+        public virtual void onHeal(Entity target, int health) { }
         public virtual void cameraStyleChange(int newStyle) { }
+        public virtual void actorTableUpdate(ActorTable actorTable) { }
     }
 }

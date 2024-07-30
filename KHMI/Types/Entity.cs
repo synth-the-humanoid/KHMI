@@ -144,6 +144,26 @@ namespace KHMI.Types
             }
         }
 
+        public bool IsEnvironment
+        {
+            get
+            {
+                if(StatPage != null)
+                {
+                    return StatPage.IsEnvironment;
+                }
+                return false;
+            }
+        }
+
+        public bool IsEnemy
+        {
+            get
+            {
+                return (!IsPartyMember && !IsEnvironment);
+            }
+        }
+
         public override string ToString()
         {
             string pos = string.Format("Position:\nX: {0:F2}\nY: {1:F2}\nZ: {2:F2}\n", Position.X, Position.Y, Position.Z);

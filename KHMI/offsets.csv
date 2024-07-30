@@ -2,6 +2,7 @@
 MainLoopEntryOffset,epic1.0.0.9,0x10354F
 CodeSeg,epic1.0.0.9,0x103000
 onHPChangeHook,epic1.0.0.9,0x2A24EE
+actorLoadHook,epic1.0.0.9,0x28D039
 
 
 --Room Loading Offsets
@@ -15,6 +16,11 @@ ARD,epic1.0.0.9,0x232E840
 RoomNameStringTable,epic1.0.0.9,0x234CA70
 RoomOffsetTableBase,epic1.0.0.9,0x4DD8C0
 SceneTableBasePtr,epic1.0.0.9,0x232E730
+WorldAcronymStringArrayBase,epic1.0.0.9,0x04DD980
+CharacterArrayBase,epic1.0.0.9,0x23F1F50
+ActorArrayBasePointer,epic1.0.0.9,0x296BFB0
+ActorArrayEndPointer,epic1.0.0.9,0x296BF88
+StatPageArrayBase,epic1.0.0.9,0x2D5D490
 
 --Entity Offsets
 PlayerEntityPtr,epic1.0.0.9,0x2D37C00

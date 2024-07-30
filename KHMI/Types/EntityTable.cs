@@ -19,6 +19,84 @@
             }
         }
 
+        public Entity[] Party
+        {
+            get
+            {
+                Entity[] entities = Entities;
+                int count = 0;
+                foreach(Entity e in entities)
+                {
+                    if(e.IsPartyMember)
+                    {
+                        count++;
+                    }
+                }
+                Entity[] party = new Entity[count];
+                int i = 0;
+                foreach(Entity e in entities)
+                {
+                    if(e.IsPartyMember)
+                    {
+                        party[i++] = e;
+                    }
+                }
+                return party;
+            }
+        }
+
+        public Entity[] Enviornment
+        {
+            get
+            {
+                Entity[] entities = Entities;
+                int count = 0;
+                foreach (Entity e in entities)
+                {
+                    if (e.IsEnvironment)
+                    {
+                        count++;
+                    }
+                }
+                Entity[] env = new Entity[count];
+                int i = 0;
+                foreach (Entity e in entities)
+                {
+                    if (e.IsEnvironment)
+                    {
+                        env[i++] = e;
+                    }
+                }
+                return env;
+            }
+        }
+
+        public Entity[] Enemies
+        {
+            get
+            {
+                Entity[] entities = Entities;
+                int count = 0;
+                foreach (Entity e in entities)
+                {
+                    if (e.IsEnemy)
+                    {
+                        count++;
+                    }
+                }
+                Entity[] enemies = new Entity[count];
+                int i = 0;
+                foreach (Entity e in entities)
+                {
+                    if (e.IsEnemy)
+                    {
+                        enemies[i++] = e;
+                    }
+                }
+                return enemies;
+            }
+        }
+
         public static EntityTable Current(DataInterface di)
         {
             IntPtr firstEnt = di.modInterface.memoryInterface.nameToAddress("FirstEntity");

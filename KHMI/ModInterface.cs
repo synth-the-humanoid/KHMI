@@ -45,12 +45,14 @@
             evHandler.registerDataEvent("lockOnEvent", memInterface.nameToAddress("LockOnEntityPtr"), 8);
             evHandler.registerDataEvent("warpTableEvent", memInterface.nameToAddress("WarpTableStartPtr"), 8);
             evHandler.registerDataEvent("cameraStyleEvent", memInterface.nameToAddress("CameraStyle"), 4);
+            evHandler.registerCodeEvent("actorLoadEvent", memInterface.nameToAddress("actorLoadHook"), 14, false, false);
         }
 
         private void createDefaultHooks()
         {
             IntPtr onHPChangeData = injectOnHPChange();
             evHandler.registerDataEvent("onHPChange", onHPChangeData, 9);
+            
         }
 
         private IntPtr injectOnHPChange()
@@ -61,7 +63,6 @@
             codInterface.insertDataHook(target, code, dataRegion, 13, false);
             return dataRegion;
         }
-
 
         public bool close()
         {

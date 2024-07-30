@@ -36,6 +36,27 @@
             return new Room(dataInterface, this, id);
         }
 
+        public string Acronym
+        {
+            get
+            {
+                IntPtr arrayBase = memoryInterface.nameToAddress("WorldAcronymStringArrayBase");
+                IntPtr currentCharPtr = (IntPtr)memoryInterface.readLong(arrayBase + worldID * 8);
+                string data = "";
+                char c;
+                do
+                {
+                    c = (char)memoryInterface.readByte(currentCharPtr++);
+                    if (c != '\0')
+                    {
+                        data += c;
+                    }
+                }
+                while (c != '\0');
+                return data;
+            }
+        }
+
         public int WorldID
         {
             get

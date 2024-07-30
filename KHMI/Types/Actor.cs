@@ -61,6 +61,11 @@
                 char[] cData = new char[data.Length];
                 for (int i = 0; i < cData.Length; i++)
                 {
+                    if (data[i] == 0)
+                    {
+                        cData[i] = '\0';
+                        break;
+                    }
                     cData[i] = (char)data[i];
                 }
                 return new string(cData);
@@ -90,6 +95,11 @@
                 char[] cData = new char[data.Length];
                 for (int i = 0; i < cData.Length; i++)
                 {
+                    if (data[i] == 0)
+                    {
+                        cData[i] = '\0';
+                        break;
+                    }
                     cData[i] = (char)data[i];
                 }
                 return new string(cData);
@@ -117,12 +127,17 @@
                 char[] cData = new char[data.Length];
                 for (int i = 0; i < cData.Length; i++)
                 {
+                    if (data[i] == 0)
+                    {
+                        cData[i] = '\0';
+                        break;
+                    }
                     cData[i] = (char)data[i];
                 }
-
                 return new string(cData);
             }
         }
+
 
         public override string ToString()
         {

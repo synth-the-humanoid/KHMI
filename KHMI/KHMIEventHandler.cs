@@ -13,15 +13,15 @@
             }
         }
 
-        public void registerDataEvent(string eventName, IntPtr address, int size, bool pauseOnCallback=false)
+        public void registerDataEvent(string eventName, IntPtr address, int size, bool pauseOnCallback=false, bool originalCodeFirst=true)
         {
-            KHMIEvent newEvent = new KHMIEvent(cInterface, address, size, false, pauseOnCallback);
+            KHMIEvent newEvent = new KHMIEvent(cInterface, address, size, false, pauseOnCallback, originalCodeFirst);
             activeEvents[eventName] = newEvent;
         }
 
-        public void registerCodeEvent(string eventName, IntPtr address, int codeSize, bool pauseOnCallback=false)
+        public void registerCodeEvent(string eventName, IntPtr address, int codeSize, bool pauseOnCallback=false, bool originalCodeFirst = true)
         {
-            KHMIEvent newEvent = new KHMIEvent(cInterface, address, codeSize, true, pauseOnCallback);
+            KHMIEvent newEvent = new KHMIEvent(cInterface, address, codeSize, true, pauseOnCallback, originalCodeFirst);
             activeEvents[eventName] = newEvent;
         }
 

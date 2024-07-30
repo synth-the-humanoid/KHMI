@@ -7,7 +7,7 @@
         private IntPtr eventAddress;
         private bool codeEvent;
         private bool pauseCallback;
-        public KHMIEvent(CodeInterface ci, IntPtr address, int size, bool isCodeEvent=false, bool pauseOnCallback=false)
+        public KHMIEvent(CodeInterface ci, IntPtr address, int size, bool isCodeEvent=false, bool pauseOnCallback=false, bool originalCodeFirst=true)
         {
             if (ci != null)
             {
@@ -20,7 +20,7 @@
                     eventSize = 1;
                     eventAddress = cInterface.allocDataRegion(eventSize);
                     cInterface.memoryInterface.writeByte(eventAddress, 0);
-                    cInterface.insertHook(address, assembleCodeEvent(eventAddress), size);
+                    cInterface.insertHook(address, assembleCodeEvent(eventAddress), size, originalCodeFirst);
                 }
                 else
                 {

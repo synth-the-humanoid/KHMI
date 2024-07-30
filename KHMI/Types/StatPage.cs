@@ -13,6 +13,10 @@
             set
             {
                 memoryInterface.writeInt(address + 0x3C, value);
+                if(PartyStatPage != null)
+                {
+                    PartyStatPage.CurrentHP = (byte)value;
+                }
             }
         }
 
@@ -25,6 +29,10 @@
             set
             {
                 memoryInterface.writeInt(address + 0x40, value);
+                if (PartyStatPage != null)
+                {
+                    PartyStatPage.MaxHP = (byte)value;
+                }
             }
         }
 
@@ -37,6 +45,10 @@
             set
             {
                 memoryInterface.writeInt(address + 0x44, value);
+                if (PartyStatPage != null)
+                {
+                    PartyStatPage.CurrentMP = (byte)value;
+                }
             }
         }
 
@@ -49,6 +61,10 @@
             set
             {
                 memoryInterface.writeInt(address + 0x48, value);
+                if (PartyStatPage != null)
+                {
+                    PartyStatPage.MaxMP = (byte)value;
+                }
             }
         }
 
@@ -61,6 +77,10 @@
             set
             {
                 memoryInterface.writeInt(address + 0x4C, value);
+                if (PartyStatPage != null)
+                {
+                    PartyStatPage.Strength = (byte)value;
+                }
             }
         }
 
@@ -73,6 +93,10 @@
             set
             {
                 memoryInterface.writeInt(address + 0x50, value);
+                if (PartyStatPage != null)
+                {
+                    PartyStatPage.Defense = (byte)value;
+                }
             }
         }
 
@@ -86,6 +110,15 @@
                     return null;
                 }
                 return new PartyStatPage(dataInterface, pspPtr);
+            }
+        }
+
+        public bool IsEnvironment
+        {
+            get
+            {
+                IntPtr firstStatPage = memoryInterface.nameToAddress("StatPageArrayBase");
+                return address == firstStatPage;
             }
         }
 
