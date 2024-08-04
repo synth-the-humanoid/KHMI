@@ -5,79 +5,33 @@ namespace TestDLLMod
 {
     public class TestMod : KHMod
     {
-        private IntPtr cameraTargetPtr;
-
         public TestMod(ModInterface mi) : base(mi)
         {
-            cameraTargetPtr = modInterface.memoryInterface.nameToAddress("CameraTargetPtr");
+            shuffleCommands();
         }
 
-
-        private void updateCamera(Entity target)
+        private void shuffleCommands()
         {
-            modInterface.memoryInterface.writeLong(cameraTargetPtr, target.EntityPtr);
-        }
-
-        public override void playerLockOn(Entity target)
-        {
-            updateCamera(target);
-        }
-
-        public override void playerLockOff()
-        {
-            updateCamera(Entity.getPlayer(modInterface.dataInterface));
-        }
-
-        public override void onDamage(Entity target, int damage)
-        {
-            EntityTable et = EntityTable.Current(modInterface.dataInterface);
-            Entity[] enemies = et.Enemies;
-
-            if (target.IsPartyMember)
+            KHCommand[] commands = new KHCommand[0x7C];
+            for (int i = 0; i < 0x7C; i++)
             {
-                target.StatPage.MaxHP -= (damage / 2);
-
-                foreach (Entity e in enemies)
-                {
-                    e.StatPage.MaxHP += (damage / 2);
-                    e.StatPage.CurrentHP += (damage / 2);
-                }
+                commands[i] = KHCommand.FromID(modInterface.dataInterface, i);
             }
-
-            else if(target.IsEnemy)
+            Random r = new Random();
+            KHCommand[] originalOrder = new KHCommand[commands.Length];
+            Array.Copy(commands, originalOrder, originalOrder.Length);
+            r.Shuffle(commands);
+            for(int i = 0; i < originalOrder.Length; i++)
             {
-                foreach(Entity e in enemies)
-                {
-                    if(e.EntityPtr != target.EntityPtr)
-                    {
-                        e.StatPage.MaxHP += (damage / 2);
-                        e.StatPage.CurrentHP += (damage / 2);
-                    }
-                }
+                originalOrder[i].ActionID = commands[i].ActionID;
+                originalOrder[i].CommandCode = commands[i].CommandCode;
+                originalOrder[i].NextMenuID = commands[i].NextMenuID;
             }
         }
 
-        public override void onEntityDeath(Entity deceased)
+        public override void warpUpdate(int newWarpID)
         {
-            if(deceased.IsPartyMember && !deceased.IsPlayer)
-            {
-                Entity player = Entity.getPlayer(modInterface.dataInterface);
-                if (player != null)
-                {
-                    player.StatPage.MaxHP = (player.StatPage.MaxHP * 9 / 10);
-                    player.StatPage.CurrentHP = (player.StatPage.CurrentHP * 9 / 10);
-
-                }
-            }
-            else if(deceased.IsEnemy)
-            {
-                EntityTable et = EntityTable.Current(modInterface.dataInterface);
-                Entity[] party = et.Party;
-                foreach(Entity e in party)
-                {
-                    e.StatPage.MaxHP = e.StatPage.MaxHP + (deceased.StatPage.MaxHP * 1 / 100);
-                }
-            }
+            shuffleCommands();
         }
     }
 }

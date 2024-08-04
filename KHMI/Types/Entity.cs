@@ -9,9 +9,9 @@ namespace KHMI.Types
         public static Entity getPlayer(DataInterface di)
         {
             IntPtr playerPtrAddress = di.modInterface.memoryInterface.nameToAddress("PlayerEntityPtr");
-            if (playerPtrAddress != IntPtr.Zero)
-            {
-                IntPtr playerAddress = (IntPtr)di.modInterface.memoryInterface.readLong(playerPtrAddress);
+            IntPtr playerAddress = (IntPtr)di.modInterface.memoryInterface.readLong(playerPtrAddress);
+            if (playerAddress != IntPtr.Zero)
+            {   
                 return new Entity(di, playerAddress);
             }
             return null;
@@ -35,7 +35,10 @@ namespace KHMI.Types
             if (entityAddressPtr != IntPtr.Zero)
             {
                 IntPtr entityAddress = (IntPtr)di.modInterface.memoryInterface.readLong(entityAddressPtr);
-                return new Entity(di, entityAddress);
+                if(entityAddress != IntPtr.Zero)
+                {
+                    return new Entity(di, entityAddress);
+                }
             }
             return null;
         }
