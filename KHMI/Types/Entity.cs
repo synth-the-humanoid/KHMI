@@ -51,6 +51,18 @@ namespace KHMI.Types
             }
         }
 
+        public int EventID
+        {
+            get
+            {
+                return memoryInterface.readInt(address + 0x4);
+            }
+            set
+            {
+                memoryInterface.writeInt(address + 0x4, value);
+            }
+        }
+
 
         public Vector3 Position
         {

@@ -51,6 +51,18 @@
             }
         }
 
+        public byte InteractionID
+        {
+            get
+            {
+                return memoryInterface.readByte(address + 0x5F);
+            }
+            set
+            {
+                memoryInterface.writeByte(address + 0x5F, value);
+            }
+        }
+
         public string MDLS
         {
             get

@@ -37,6 +37,7 @@ namespace KHMI
 
         internal void handleEvent(string eventName, byte[] data, bool shouldPause)
         {
+            bool roomLoadRan = false;
             if (shouldPause)
             {
                 modInterface.codeInterface.StartDebug();
@@ -45,18 +46,31 @@ namespace KHMI
             switch (eventName)
             {
                 case "warpEvent":
-                    warpUpdate(BitConverter.ToInt32(data));
+                    Warp newWarp = Warp.FromID(modInterface.dataInterface, BitConverter.ToInt32(data), WarpTable.Current(modInterface.dataInterface));
+                    warpUpdate(newWarp);
+                    if(!roomLoadRan)
+                    {
+                        roomLoadRan = true;
+                        onRoomLoad();
+                    }
                     break;
                 case "roomEvent":
                     Room newRoom = new Room(modInterface.dataInterface, World.Current(modInterface.dataInterface), BitConverter.ToInt32(data));
                     roomUpdate(newRoom);
+                    if (!roomLoadRan)
+                    {
+                        roomLoadRan = true;
+                        onRoomLoad();
+                    }
                     break;
                 case "worldEvent":
                     World newWorld = new World(modInterface.dataInterface, BitConverter.ToInt32(data));
                     worldUpdate(newWorld);
-                    IntPtr roomIDAddress = modInterface.memoryInterface.nameToAddress("RoomID");
-                    Room newWRoom = new Room(modInterface.dataInterface, newWorld, modInterface.memoryInterface.readInt(roomIDAddress));
-                    roomUpdate(newWRoom);
+                    if (!roomLoadRan)
+                    {
+                        roomLoadRan = true;
+                        onRoomLoad();
+                    }
                     break;
                 case "playerLoadedEvent":
                     IntPtr playerAddress = (IntPtr)BitConverter.ToInt64(data);
@@ -158,7 +172,8 @@ namespace KHMI
             updateLoadedRoomInfo();
         }
 
-        public virtual void warpUpdate(int newWarpID) { }
+        public virtual void onRoomLoad() { }
+        public virtual void warpUpdate(Warp newWarp) { }
         public virtual void roomUpdate(Room newRoom) { }
         public virtual void worldUpdate(World newWorld) { }
         public virtual void playerLoaded(Entity newPlayer) { }

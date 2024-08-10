@@ -52,7 +52,6 @@
         {
             IntPtr onHPChangeData = injectOnHPChange();
             evHandler.registerDataEvent("onHPChange", onHPChangeData, 9);
-            
         }
 
         private IntPtr injectOnHPChange()
@@ -63,6 +62,10 @@
             codInterface.insertDataHook(target, code, dataRegion, 13, false);
             return dataRegion;
         }
+
+        
+
+        
 
         public bool close()
         {

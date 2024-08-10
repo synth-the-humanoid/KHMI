@@ -32,6 +32,14 @@
             }
         }
 
+        public string ARDName
+        {
+            get
+            {
+                return string.Format("{0}{1:D2}.ard", world.Acronym, roomID + 1);
+            }
+        }
+
         public int RoomID
         {
             get

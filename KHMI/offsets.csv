@@ -21,6 +21,8 @@ CharacterArrayBase,epic1.0.0.9,0x23F1F50
 ActorArrayBasePointer,epic1.0.0.9,0x296BFB0
 ActorArrayEndPointer,epic1.0.0.9,0x296BF88
 StatPageArrayBase,epic1.0.0.9,0x2D5D490
+ScriptCounter,epic1.0.0.9,0x238D77C
+ScriptArrayBase,epic1.0.0.9,0x2398D20
 
 --Entity Offsets
 PlayerEntityPtr,epic1.0.0.9,0x2D37C00

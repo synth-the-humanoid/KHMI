@@ -5,33 +5,21 @@ namespace TestDLLMod
 {
     public class TestMod : KHMod
     {
-        public TestMod(ModInterface mi) : base(mi)
-        {
-            shuffleCommands();
-        }
+        public TestMod(ModInterface mi) : base(mi) { }
 
-        private void shuffleCommands()
-        {
-            KHCommand[] commands = new KHCommand[0x7C];
-            for (int i = 0; i < 0x7C; i++)
-            {
-                commands[i] = KHCommand.FromID(modInterface.dataInterface, i);
-            }
-            Random r = new Random();
-            KHCommand[] originalOrder = new KHCommand[commands.Length];
-            Array.Copy(commands, originalOrder, originalOrder.Length);
-            r.Shuffle(commands);
-            for(int i = 0; i < originalOrder.Length; i++)
-            {
-                originalOrder[i].ActionID = commands[i].ActionID;
-                originalOrder[i].CommandCode = commands[i].CommandCode;
-                originalOrder[i].NextMenuID = commands[i].NextMenuID;
-            }
-        }
 
-        public override void warpUpdate(int newWarpID)
+        public override void playerLockOn(Entity target)
         {
-            shuffleCommands();
+            KHScript[] scripts = KHScriptTable.Current(modInterface.dataInterface).Scripts;
+            for(int i = 0; i < scripts.Length; i++)
+            {
+                Console.WriteLine("Script {0:D}\n - Event ID: {1:X}", i, scripts[i].EventID);
+                if (scripts[i].Entity != null)
+                {
+                    Console.WriteLine(" - Entity: {0}", scripts[i].Entity.Actor.Name);
+                }
+                Console.WriteLine();
+            }
         }
     }
 }
