@@ -88,24 +88,24 @@ namespace KHMI.Types
             }
         }
 
-        public int StatPageID
-        {
-            get
-            {
-                return memoryInterface.readInt(address + 0x6C);
-            }
-        }
-
         public StatPage StatPage
         {
             get
             {
-                int offset = StatPageID;
+                int offset = memoryInterface.readInt(address + 0x6C);
                 if (offset == 0)
                 {
                     return null;
                 }
                 return new StatPage(dataInterface, dataInterface.convert4to8(offset));
+            }
+        }
+
+        public bool IsTargeted
+        {
+            get
+            {
+                return memoryInterface.readByte(address + 0x80) == 1;
             }
         }
 

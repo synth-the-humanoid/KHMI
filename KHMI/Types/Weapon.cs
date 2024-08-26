@@ -13,7 +13,7 @@
         }
 
 
-        public byte ModelID
+        public byte WeaponID
         {
             get
             {
@@ -25,9 +25,38 @@
             }
         }
 
+        public PartyMemberID Owner
+        {
+            get
+            {
+                int baseWeaponID = 0x51; // kingdom key id
+                int displacement = ItemID - baseWeaponID;
+                foreach(PartyMemberID partyID in Enum.GetValues(typeof(PartyMemberID)))
+                {
+                    int weaponCount = WeaponStatPage.GetWeaponCountForPartyMember(dataInterface, partyID);
+                    if(displacement < weaponCount)
+                    {
+                        return partyID;
+                    }
+                    displacement -= Math.Max(weaponCount,1);
+                }
+                return PartyMemberID.POOH;
+            }
+        }
+
+        public WeaponStatPage WeaponStatPage
+        {
+            get
+            {
+                return WeaponStatPage.FromID(dataInterface, Owner, WeaponID);
+            }
+        }
+
+        
+
         public override string ToString()
         {
-            return string.Format("Weapon:\n{0}\nModel ID: {1:D}\n", base.ToString(), ModelID);
+            return string.Format("Weapon:\n{0}\nWeapon ID: {1:D}\n", base.ToString(), WeaponID);
         }
     }
 }

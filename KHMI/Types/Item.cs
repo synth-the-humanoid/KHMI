@@ -1,5 +1,30 @@
 ﻿namespace KHMI.Types
 {
+    public enum IconType
+    {
+        FIELD_CONSUMABLE = 0,
+        EQUIPMENT = 1,
+        KEYBLADE = 2,
+        STAFF = 3,
+        SHIELD = 4,
+        SPEAR = 5,
+        UNARMED_YELLOW = 6,
+        SABER = 7,
+        UNARMED_RED = 8,
+        UNARMED_BLUE = 9,
+        DAGGER = 10,
+        UNARMED_YELLOW2 = 11,
+        PARTY_CONSUMABLE = 12,
+        MISC = 13
+    }
+
+    public enum ItemType
+    {
+        CONSUMABLE = 0,
+        WEAPON = 1,
+        MISC = 2
+    }
+
     public class Item : KHMIType
     {
         public Item(DataInterface di, IntPtr address) : base(di, address) { }
@@ -93,15 +118,72 @@
             }
         }
 
-        public byte IconID
+        public IconType IconID
         {
             get
             {
-                return memoryInterface.readByte(address + 0x2);
+                return (IconType)memoryInterface.readByte(address + 0x2);
             }
             set
             {
-                memoryInterface.writeByte(address + 0x2, value);
+                memoryInterface.writeByte(address + 0x2, (byte)value);
+            }
+        }
+
+        public ItemType ItemType
+        {
+            get
+            {
+                switch(IconID)
+                {
+                    case IconType.FIELD_CONSUMABLE:
+                        return ItemType.CONSUMABLE;
+                    case IconType.PARTY_CONSUMABLE:
+                        return ItemType.CONSUMABLE;
+                    case IconType.KEYBLADE:
+                        return ItemType.WEAPON;
+                    case IconType.STAFF:
+                        return ItemType.WEAPON;
+                    case IconType.SHIELD:
+                        return ItemType.WEAPON;
+                    case IconType.SPEAR:
+                        return ItemType.WEAPON;
+                    case IconType.SABER:
+                        return ItemType.WEAPON;
+                    case IconType.DAGGER:
+                        return ItemType.WEAPON;
+                    case IconType.UNARMED_BLUE:
+                        return ItemType.WEAPON;
+                    case IconType.UNARMED_YELLOW:
+                        return ItemType.WEAPON;
+                    case IconType.UNARMED_YELLOW2:
+                        return ItemType.WEAPON;
+                    case IconType.UNARMED_RED:
+                        return ItemType.WEAPON;
+                    default:
+                        return ItemType.MISC;
+                }
+            }
+        }
+
+        public IntPtr Address
+        {
+            get
+            {
+                return address;
+            }
+        }
+
+        public int DescOffset
+        {
+            get
+            {
+                return memoryInterface.readInt(address + 0x0C);
+            }
+
+            set
+            {
+                memoryInterface.writeInt(address + 0x0C, value);
             }
         }
 
@@ -109,7 +191,7 @@
         {
             get
             {
-                int offset = memoryInterface.readInt(address + 0x0C);
+                int offset = DescOffset;
                 IntPtr stringAddress = dataInterface.convert4to8(offset);
                 return new KHString(dataInterface, stringAddress);
             }

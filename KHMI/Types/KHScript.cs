@@ -56,6 +56,14 @@
                 memoryInterface.writeInt(address + 0xA4, value);
             }
         }
+        
+        public IntPtr ReactionEventCodePtr
+        {
+            get
+            {
+                return CodePtr + ReactionEventOffset * 4;
+            }
+        }
 
         public int CollisionEventOffset
         {
@@ -69,6 +77,14 @@
             }
         }
 
+        public IntPtr CollisionEventCodePtr
+        {
+            get
+            {
+                return CodePtr + CollisionEventOffset * 4;
+            }
+        }
+
         public int TargetedEventOffset
         {
             get
@@ -78,6 +94,14 @@
             set
             {
                 memoryInterface.writeInt(address + 0xAC, value);
+            }
+        }
+
+        public IntPtr TargetedEventCodePtr
+        {
+            get
+            {
+                return CodePtr + TargetedEventOffset * 4;
             }
         }
 

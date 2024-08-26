@@ -43,3 +43,6 @@ ChestRewardTableBase,epic1.0.0.9,0x529A60
 InventoryArray,epic1.0.0.9,0x2DEA17A
 CommandMenuArrayBase,epic1.0.0.9,0x2D54370
 CommandBasePtr,epic1.0.0.9,0x2D376D0
+PartyMemberIDArray,epic1.0.0.9,0x2DEA16E
+PartyWeaponOffsetTable,epic1.0.0.9,0x528D60
+WeaponInfoTable,epic1.0.0.9,0x2D236C0

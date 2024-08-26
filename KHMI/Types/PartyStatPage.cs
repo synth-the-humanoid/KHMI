@@ -324,6 +324,23 @@
             }
         }
 
+        public PartyMemberID PartyMemberID
+        {
+            get
+            {
+                PartyList current = PartyList.Current(dataInterface);
+                Entity[] entities = current.Entities;
+                for(int i = 0; i < entities.Length; i++)
+                {
+                    if (entities[i].StatPage.PartyStatPage.address == address)
+                    {
+                        return current.Members[i];
+                    }
+                }
+                return PartyMemberID.POOH;
+            }
+        }
+
         public override string ToString()
         {
             string baseString = string.Format("PartyStatPage:\nHP: {0:D}/{1:D}\nMP: {2:D}/{3:D}\nMax AP: {4:D}\nStrength: {5:D}\nDefense: {6:D}\n", CurrentHP, MaxHP, CurrentMP, MaxMP, MaxAP, Strength, Defense);

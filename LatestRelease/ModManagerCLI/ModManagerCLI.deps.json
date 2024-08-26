@@ -16,7 +16,10 @@
       },
       "KHMI/1.0.0": {
         "runtime": {
-          "KHMI.dll": {}
+          "KHMI.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }
